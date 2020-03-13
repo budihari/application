@@ -32,6 +32,9 @@ $profile = $profil->row();
                   <a href="<?= site_url('banner'); ?>"><i class="fa fa-television"></i> Manajemen Banner</a>
                </li>
                <li>
+                  <a href="<?= site_url('administrator/kupon'); ?>"><i class="fa fa-ticket"></i> Manajemen Kupon</a>
+               </li>
+               <li>
                   <a href="<?= site_url('transaksi'); ?>"><i class="fa fa-exchange"></i> Transaksi</a>
                </li>
                <li>

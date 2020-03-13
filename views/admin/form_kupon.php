@@ -52,7 +52,7 @@ $time = date("H:i:s", time());
             <label class="control-label col-md-2 col-sm-2 col-xs-12" >diskon / potongan
             </label>
             <div class="col-md-7 col-sm-6 col-xs-12">
-               <input type="text" class="form-control col-md-7 col-xs-12" name="potongan" placeholder="Atas Nama" value="<?php if(!empty($cek)){echo $cek->potongan;} ?>">
+               <input type="text" class="form-control col-md-7 col-xs-12" name="potongan" value="<?php if(!empty($cek)){echo $cek->potongan;} ?>">
             </div>
          </div>
 
@@ -73,21 +73,24 @@ $time = date("H:i:s", time());
          </div>
 
          <div class="form-group">
-            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Alasan Ditolak
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Batas Peruser
             </label>
             <div class="col-md-7 col-sm-6 col-xs-12">
-               <select id="select_reason" name="alasan_tolak" class="form-control" onchange="reason()">
-                   <option value="">Select Reason</option>
-                   <option value="insufficient payment">Kurang Bayar (insufficient payment)</option>
-                   <option value="proof of payment is invalid">Bukti Pembayaran Tidak Sesuai (proof of payment is invalid)</option>
-               </select>
-               <!--<input id="alasan" class="form-control col-md-7 col-xs-12" style="display: none;" name="alasan_tolak" placeholder="Alasan Lainnya">-->
+               <input type="text" class="form-control col-md-7 col-xs-12" name="batas_peruser" value="<?php if(!empty($cek)){echo $cek->batas_peruser;}?>">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Batas Waktu / Periode
+            </label>
+            <div class="col-md-7 col-sm-6 col-xs-12">
+               <input type="text" class="form-control col-md-7 col-xs-12" name="batas_waktu" value="<?php if(!empty($cek)){echo $cek->batas_waktu;}?>">
             </div>
          </div>
 
          <div class="form-group">
             <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-               <button type="submit" class="btn btn-success" name="formbayar" value="Submit">Submit</button>
+               <button type="submit" class="btn btn-success" name="formkupon" value="Submit">Submit</button>
               <button type="button" onclick="window.history.go(-1)" class="btn btn-primary" >Kembali</button>
             </div>
          </div>

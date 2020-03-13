@@ -117,7 +117,19 @@ class Administrator extends CI_Controller {
 
 	public function kupon()
 	{
-		
+		$this->cek_login();
+		$sql = $this->db->order_by('terakhir_update','desc');
+		$sql = $this->db->get('kupon');
+		$data['header'] = "Manajemen Kupon";
+		$data['kupon'] = $sql;
+		$this->template->admin('admin/list_kupon', $data);
+	}
+
+	public function add_kupon()
+	{
+		$this->cek_login();
+		$data['header'] = "Tambah Kupon";
+		$this->template->admin('admin/form_kupon', $data);
 	}
 
 	public function report()

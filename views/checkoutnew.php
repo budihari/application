@@ -159,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    <input id="kupon" style="max-width:calc(100% - 116px); padding:0px 8px;" type="text" name="coupon" value ="<?php echo $nama_kupon;?>" placeholder="apply coupon code">
    <button id="btn_promo" class="btn blue" style="position:absolute; right:0;" type="button" name="coupon_code">apply</button>
    </div>
-   <span id="text_coupon"></span>
+   <span id="text_coupon"><?php if(!empty($deskripsi_kupon)){echo $deskripsi_kupon;}?></span>
 </div>
 
 <br>
