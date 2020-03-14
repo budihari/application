@@ -414,7 +414,7 @@ thead th{
 <script>
 $(document).ready(function() {
 $('#btn_promo').click(function() {
-   var ongkir = $('#ongkir').text();
+   var ongkir = $('#layanan').val();
    var coupon = $('#kupon').val();
 
    $.ajax({
