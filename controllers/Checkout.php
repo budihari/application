@@ -993,7 +993,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 	public function discount()
 	{
-		$kupon 	= $this->app->get_where('kupon', ['id_kupon' => $this->input->post('coupon', TRUE)]);
+		$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->input->post('coupon')]);
 		$ongkir = 0;
 		if(!empty($this->input->post('ongkir'))){
 			$layanan 	= explode(",", $this->encryption->decrypt($this->input->post('ongkir')));
@@ -1004,11 +1004,21 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 			$kupon = $kupon->row();
 			$diskon = $kupon->persen * $this->cart->total() / 100;
 			if($this->cart->total() >= $kupon->min_bayar){
-					if($diskon >= $kupon->potongan){
+				if($kupon->kategori != 'ongkir'){
+					if($diskon > $kupon->potongan){
 						$diskon = $kupon->potongan;
-						$deskripsi = '<span style="color:green;">you get a discount delivery rp '.number_format($diskon, 0, ',', ',').'</span>';
+						$deskripsi = '<span style="color:green;">you get a discount rp '.number_format($diskon, 0, ',', ',').'</span>';
 					}
-				/*
+					else{
+						$deskripsi = '<span style="color:green;">you get a discount rp '.number_format($diskon, 0, ',', ',').'</span>';
+					}
+					$datauser = array (
+						'nama_kupon' => $kupon->id_kupon,
+						'discount' => $diskon
+							);
+					$this->session->set_userdata($datauser);
+				}
+				
 				elseif($kupon->kategori == 'ongkir'){
 					if($ongkir > 1){
 						if($ongkir < $kupon->potongan){
@@ -1028,7 +1038,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 						$deskripsi = '<span style="color:red;">choose a courier first</span>';
 					}
 				}
-				*/
+				
 			} //end if $this->cart->total() >= $kupon->min_bayar
 			else{
 				$datauser = array (
