@@ -126,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   </tr>
                <?php endforeach; ?>
                <tr>
-                  <td colspan="3">Potongan</td>
+                  <td colspan="3">Diskon (<?= $user->kupon; ?>)</td>
                   <td style="text-align:right">- <?=number_format($user->potongan, 0, ',','.')?></td>
                </tr>
                <tr>

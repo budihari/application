@@ -358,6 +358,7 @@ class Transaksi extends CI_Controller {
 						'catatan',
 						'kurir',
 						'resi',
+						'kupon',
 						'potongan',
 						'kode_unik',
 						'ongkir',

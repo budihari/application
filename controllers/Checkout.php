@@ -404,7 +404,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				'.$table.'
 			
 					<tr>
-					<td>discount</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($potongan, 0, ',', '.').'</td>
+					<td>discount ('.$this->session->userdata('nama_kupon').')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($potongan, 0, ',', '.').'</td>
 					</tr>
 					<tr>
 					<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($kodeunik, 0, ',', '.').'</td>
@@ -438,6 +438,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				'nama_pemesan' 		=> $nama,
 				'telepon'       	=> $phone,
 				'email' 			=> $email,
+				'kupon'				=> $this->session->userdata('nama_kupon'),
 				'potongan'			=> $potongan,
 				'total' 			=> $total,
 				'kode_unik'			=> $kodeunik,
@@ -498,7 +499,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				'.$table.'
 			
 					<tr>
-					<td>discount</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($potongan, 0, ',', '.').'</td>
+					<td>discount ('.$this->session->userdata('nama_kupon').')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($potongan, 0, ',', '.').'</td>
 					</tr>
 					<tr>
 					<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($kodeunik, 0, ',', '.').'</td>
