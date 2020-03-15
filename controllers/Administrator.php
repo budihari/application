@@ -118,6 +118,7 @@ class Administrator extends CI_Controller {
 	public function kupon()
 	{
 		$this->cek_login();
+
 		$sql = $this->db->order_by('terakhir_update','desc');
 		$sql = $this->db->get('kupon');
 		$data['header'] = "Manajemen Kupon";
@@ -127,7 +128,40 @@ class Administrator extends CI_Controller {
 
 	public function add_kupon()
 	{
+
 		$this->cek_login();
+
+		if ($this->input->post('formkupon', TRUE) == 'Submit') {
+			//validasi
+			$this->form_validation->set_rules('id_kupon', 'ID Kupon', 'required');
+			$this->form_validation->set_rules('nama_kupon', 'Nama Kupon', 'required|min_length[4]');
+			$this->form_validation->set_rules('deskripsi_kupon', 'Deskripsi Kupon', 'required');
+			$this->form_validation->set_rules('persen', 'Berapa Persen', 'required');
+			$this->form_validation->set_rules('potongan', 'Maksimal Diskon', 'required');
+			$this->form_validation->set_rules('stok_kupon', 'Stok Kupon', 'required');
+			$this->form_validation->set_rules('min_beli', 'Minimal Pembelian', 'required');
+			$this->form_validation->set_rules('batas_peruser', 'Batas Peruser', 'required');
+	
+			$id_kupon = $this->input->post('id_kupon', TRUE);
+			//$table = 't_order o JOIN t_users usr ON (o.email = usr.email)';
+			//$cek = $this->bayar->get_where($table, array('o.id_order' => $id_order)) -> row();
+			$min_beli = $this->input->post('min_beli', TRUE);
+			$min_beli = str_replace(array(',', '.'), "", $min_beli);
+			$bayar = array (
+				'id_kupon' => $id_kupon,
+				'terakhir_update' => date("Y-m-d h:i:s", time()),
+				'nama_kupon' => $this->input->post('nama_kupon', TRUE),
+				'deskripsi_kupon' => $this->input->post('nama_kupon', TRUE),
+				'persen' => $this->input->post('persen', TRUE),
+				'potongan' => $this->input->post('potongan', TRUE),
+				'stok_kupon' => $this->input->post('stok_kupon', TRUE),
+				'min_bayar' => $this->input->post('min_beli', TRUE),
+				'kategori' => $this->input->post('kategori', TRUE),
+			 );
+			 $this->db->insert('buktipembayaran', $bayar);
+			 redirect('pembayaran/valid/'.$idbayar);
+		  } // end submit
+
 		$data['header'] = "Tambah Kupon";
 		$this->template->admin('admin/form_kupon', $data);
 	}

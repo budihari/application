@@ -49,7 +49,15 @@ $time = date("H:i:s", time());
          </div>
 
          <div class="form-group">
-            <label class="control-label col-md-2 col-sm-2 col-xs-12" >diskon / potongan
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Berapa Persen
+            </label>
+            <div class="col-md-7 col-sm-6 col-xs-12">
+               <input type="number" class="form-control" style="display:inline; max-width: 80px;" name="persen" max="100" value="<?php if(!empty($cek)){echo $cek->persen;} ?>"> %
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Maksimal Diskon
             </label>
             <div class="col-md-7 col-sm-6 col-xs-12">
                <input type="text" class="form-control col-md-7 col-xs-12" name="potongan" value="<?php if(!empty($cek)){echo $cek->potongan;} ?>">
@@ -69,6 +77,14 @@ $time = date("H:i:s", time());
             </label>
             <div class="col-md-7 col-sm-6 col-xs-12">
                <input id="amount" type="text" class="form-control col-md-7 col-xs-12" name="min_beli" value="<?php if(!empty($cek)){echo "Rp ".number_format($cek->min_bayar, 0, ',', '.');}?>">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Kategori
+            </label>
+            <div class="col-md-7 col-sm-6 col-xs-12">
+               <input type="number" class="form-control" style="display:inline; max-width: 80px;" name="persen" max="100" value="<?php if(!empty($cek)){echo $cek->persen;} ?>"> %
             </div>
          </div>
 
