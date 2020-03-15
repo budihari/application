@@ -227,6 +227,14 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 					$this->session->set_userdata($datauser);
 				}
 				else{
+					$diskon = $kupon->persen * $this->cart->total() / 100;
+					if($diskon >= $kupon->potongan){
+						$diskon = $kupon->potongan;
+					}
+					$datauser = array (
+						'discount' 		=> $diskon
+						 );
+					$this->session->set_userdata($datauser);
 					$key['deskripsi_kupon'] = '<span style="color:green;">you get a discount rp '.number_format($this->session->userdata('discount'), 0, ',', ',').'</span>';
 				}
 			}
@@ -1030,7 +1038,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 						$datauser = array (
 							'nama_kupon' => $kupon->id_kupon,
 							'discount' => $diskon
-								);
+						);
 						$this->session->set_userdata($datauser);
 						$deskripsi = '<span style="color:green;">you get a discount delivery rp '.number_format($this->session->userdata('discount'), 0, ',', ',').'</span>';
 					}
