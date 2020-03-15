@@ -205,41 +205,6 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 			$this->session->set_userdata($datauser);
 		}
 		$key['uniq'] = $this->session->userdata('uniq');
-		$key['deskripsi_kupon'] = '';
-		//$this->session->unset_userdata('uniq');
-		if (!$this->session->userdata('discount'))
-      	{
-			$datauser = array (
-				'nama_kupon' 	=> '',
-				'discount' 		=> 0
-    		     );
-			$this->session->set_userdata($datauser);
-		}
-		else{
-			$kupon 	= $this->app->get_where('kupon', ['id_kupon' => $this->session->userdata('nama_kupon')]);
-			if($kupon->num_rows() == 1){
-				$kupon = $kupon->row();
-				if($this->cart->total() < $kupon->min_bayar || $kupon->kategori == 'ongkir'){
-					$datauser = array (
-						'nama_kupon' 	=> '',
-						'discount' 		=> 0
-						 );
-					$this->session->set_userdata($datauser);
-				}
-				else{
-					$diskon = $kupon->persen * $this->cart->total() / 100;
-					if($diskon >= $kupon->potongan){
-						$diskon = $kupon->potongan;
-					}
-					$datauser = array (
-						'discount' 		=> $diskon
-						 );
-					$this->session->set_userdata($datauser);
-					$key['deskripsi_kupon'] = '<span style="color:green;">you get a discount rp '.number_format($this->session->userdata('discount'), 0, ',', ',').'</span>';
-				}
-			}
-		}
-		$key['discount'] = $this->session->userdata('discount');
 
 		if ($this->input->post('submit', TRUE) == 'submit' && $this->session->userdata('user_id'))
     	{
@@ -582,7 +547,43 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				*/
 				$redirect = 'checkout/payment_info/'.$id_order;
                 redirect($redirect);
-        } //end if submit
+		} //end if submit
+		
+		$key['deskripsi_kupon'] = '';
+		//$this->session->unset_userdata('uniq');
+		if (!$this->session->userdata('discount'))
+      	{
+			$datauser = array (
+				'nama_kupon' 	=> '',
+				'discount' 		=> 0
+    		     );
+			$this->session->set_userdata($datauser);
+		}
+		else{
+			$kupon 	= $this->app->get_where('kupon', ['id_kupon' => $this->session->userdata('nama_kupon')]);
+			if($kupon->num_rows() == 1){
+				$kupon = $kupon->row();
+				if($this->cart->total() < $kupon->min_bayar || $kupon->kategori == 'ongkir'){
+					$datauser = array (
+						'nama_kupon' 	=> '',
+						'discount' 		=> 0
+						 );
+					$this->session->set_userdata($datauser);
+				}
+				else{
+					$diskon = $kupon->persen * $this->cart->total() / 100;
+					if($diskon >= $kupon->potongan){
+						$diskon = $kupon->potongan;
+					}
+					$datauser = array (
+						'discount' 		=> $diskon
+						 );
+					$this->session->set_userdata($datauser);
+					$key['deskripsi_kupon'] = '<span style="color:green;">you get a discount rp '.number_format($this->session->userdata('discount'), 0, ',', ',').'</span>';
+				}
+			}
+		}
+		$key['discount'] = $this->session->userdata('discount');
 
 		$key['key']    = $this->app->get_where('t_profil', ['id_profil' => 1]);
 		$key['title']  = "checkout";
@@ -1113,13 +1114,29 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 			if ($this->form_validation->run() == TRUE)
 			{
 				$biaya = explode(',', $this->encryption->decrypt($this->input->post('layanan', TRUE)));
+				$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->session->userdata('nama_kupon')]);
+				if($kupon->num_rows() == 1){
+					$kupon = $kupon->row();
+					if($kupon->kategori == 'ongkir'){
+						if($biaya[0] < $kupon->potongan){
+							$diskon = $biaya[0];
+							}
+							else{
+								$diskon = $kupon->potongan;
+							}
+							$datauser = array (
+								'discount' => $diskon
+							);
+							$this->session->set_userdata($datauser);
+					}
+				}
 				$total = $this->cart->total() + $biaya[0] + $this->session->userdata('uniq') - $this->session->userdata('discount');
 				$datauser = array (
     		    'cost' => $biaya[0]
     		     );
           			$this->session->set_userdata($datauser);
 
-				echo $biaya[0].','.$total;
+				echo $biaya[0].','.$total.','.$diskon;
 			}
 		}
 	}

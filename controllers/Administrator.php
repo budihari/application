@@ -147,7 +147,7 @@ class Administrator extends CI_Controller {
 			//$cek = $this->bayar->get_where($table, array('o.id_order' => $id_order)) -> row();
 			$min_beli = $this->input->post('min_beli', TRUE);
 			$min_beli = str_replace(array(',', '.'), "", $min_beli);
-			$bayar = array (
+			$kupon = array (
 				'id_kupon' => $id_kupon,
 				'terakhir_update' => date("Y-m-d h:i:s", time()),
 				'nama_kupon' => $this->input->post('nama_kupon', TRUE),
@@ -158,8 +158,8 @@ class Administrator extends CI_Controller {
 				'min_bayar' => $this->input->post('min_beli', TRUE),
 				'kategori' => $this->input->post('kategori', TRUE),
 			 );
-			 $this->db->insert('buktipembayaran', $bayar);
-			 redirect('pembayaran/valid/'.$idbayar);
+			 $this->db->insert('kupon', $kupon);
+			 redirect('administrator/kupon');
 		  } // end submit
 
 		$data['header'] = "Tambah Kupon";

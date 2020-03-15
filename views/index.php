@@ -643,6 +643,7 @@ else{
                         document.getElementById("bayar").innerHTML = total;
                         document.getElementById("ongkir").innerHTML = convertToRupiah(hasil[0]);
                         document.getElementById("ongkir2").innerHTML = convertToRupiah(hasil[0]);
+                        document.getElementById("discount").innerHTML = convertToRupiah(hasil[2]);
                         //document.getElementById("ongkir3").innerHTML = convertToRupiah(hasil[0]);
                      }
                   });
