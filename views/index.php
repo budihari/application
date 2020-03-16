@@ -627,11 +627,12 @@ else{
 
                $('#layanan').change(function() {
                   var layanan = $('#layanan').val();
+                  var kupon = $('#kupon').val();
 
                   $.ajax({
                      url: "<?=base_url();?>checkout/cost",
                      method: "POST",
-                     data: { layanan : layanan },
+                     data: { layanan : layanan, kupon:kupon },
                      success: function(obj) {
                         var hasil = obj.split(",");
 
