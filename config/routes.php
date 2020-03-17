@@ -60,6 +60,7 @@ $route['signin'] = 'home/login';
 $route['signup'] = 'home/registrasi';
 $route['administrator'] = 'administrator/index';
 $route['administrator/(:any)'] = 'administrator/$1';
+$route['administrator/(:any)/(:any)'] = 'administrator/$1/$2';
 $route['item'] = 'item/index';
 $route['item/(:any)'] = 'item/$1';
 $route['item/(:any)/(:any)'] = 'item/$1/';

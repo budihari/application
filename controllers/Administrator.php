@@ -141,10 +141,11 @@ class Administrator extends CI_Controller {
 			$this->form_validation->set_rules('stok_kupon', 'Stok Kupon', 'required');
 			$this->form_validation->set_rules('min_beli', 'Minimal Pembelian', 'required');
 			$this->form_validation->set_rules('batas_peruser', 'Batas Peruser', 'required');
-	
+			if($this->form_validation->run() == TRUE){
 			$id_kupon = $this->input->post('id_kupon', TRUE);
 			//$table = 't_order o JOIN t_users usr ON (o.email = usr.email)';
 			//$cek = $this->bayar->get_where($table, array('o.id_order' => $id_order)) -> row();
+			$potongan = str_replace(array(',', '.'), "", $this->input->post('potongan', TRUE));
 			$min_beli = $this->input->post('min_beli', TRUE);
 			$min_beli = str_replace(array(',', '.'), "", $min_beli);
 			$kupon = array (
@@ -153,18 +154,78 @@ class Administrator extends CI_Controller {
 				'nama_kupon' => $this->input->post('nama_kupon', TRUE),
 				'deskripsi_kupon' => $this->input->post('nama_kupon', TRUE),
 				'persen' => $this->input->post('persen', TRUE),
-				'potongan' => $this->input->post('potongan', TRUE),
+				'potongan' => $potongan,
 				'stok_kupon' => $this->input->post('stok_kupon', TRUE),
-				'min_bayar' => $this->input->post('min_beli', TRUE),
+				'min_bayar' => $min_beli,
 				'kategori' => $this->input->post('kategori', TRUE),
+				'batas_peruser' => $this->input->post('batas_peruser', TRUE),
+				'batas_waktu' => $this->input->post('batas_waktu', TRUE),
+				'dibuat' => $this->session->userdata('user')
 			 );
 			 $this->db->insert('kupon', $kupon);
 			 redirect('administrator/kupon');
+			} // end if form validation true
 		  } // end submit
 
 		$data['header'] = "Tambah Kupon";
 		$this->template->admin('admin/form_kupon', $data);
 	}
+
+	public function edit_kupon()
+	{
+
+		$this->cek_login();
+
+		$id_kupon = $this->uri->segment(3);
+
+		if ($this->input->post('formkupon', TRUE) == 'Submit') {
+			//validasi
+			$this->form_validation->set_rules('id_kupon', 'ID Kupon', 'required');
+			$this->form_validation->set_rules('nama_kupon', 'Nama Kupon', 'required|min_length[4]');
+			$this->form_validation->set_rules('deskripsi_kupon', 'Deskripsi Kupon', 'required');
+			$this->form_validation->set_rules('persen', 'Berapa Persen', 'required');
+			$this->form_validation->set_rules('potongan', 'Maksimal Diskon', 'required');
+			$this->form_validation->set_rules('stok_kupon', 'Stok Kupon', 'required');
+			$this->form_validation->set_rules('min_beli', 'Minimal Pembelian', 'required');
+			$this->form_validation->set_rules('batas_peruser', 'Batas Peruser', 'required');
+			if($this->form_validation->run() == TRUE){
+			//$table = 't_order o JOIN t_users usr ON (o.email = usr.email)';
+			//$cek = $this->bayar->get_where($table, array('o.id_order' => $id_order)) -> row();
+			$potongan = str_replace(array(',', '.'), "", $this->input->post('potongan', TRUE));
+			$min_beli = $this->input->post('min_beli', TRUE);
+			$min_beli = str_replace(array(',', '.'), "", $min_beli);
+			$kupon = array (
+				'id_kupon' => $this->input->post('id_kupon', TRUE),
+				'terakhir_update' => date("Y-m-d h:i:s", time()),
+				'nama_kupon' => $this->input->post('nama_kupon', TRUE),
+				'deskripsi_kupon' => $this->input->post('nama_kupon', TRUE),
+				'persen' => $this->input->post('persen', TRUE),
+				'potongan' => $potongan,
+				'stok_kupon' => $this->input->post('stok_kupon', TRUE),
+				'min_bayar' => $min_beli,
+				'kategori' => $this->input->post('kategori', TRUE),
+				'batas_peruser' => $this->input->post('batas_peruser', TRUE),
+				'batas_waktu' => $this->input->post('batas_waktu', TRUE),
+				'dibuat' => $this->session->userdata('user')
+			);
+			$this->db->update('kupon', $kupon, array('id_kupon' => $id_kupon));
+			redirect('administrator/kupon');
+			} // end if form validation true
+		  } // end submit
+
+		$kupon = $this->db->get_where('kupon', array('id_kupon' => $id_kupon));
+		$data['header'] = "Tambah Kupon";
+		$data['kupon'] = $kupon;
+		$this->template->admin('admin/form_kupon', $data);
+	}
+
+	public function delete_kupon()
+   	{
+   		$this->cek_login();
+		$id_kupon = $this->uri->segment(3);
+		$this->db->delete('kupon', ['id_kupon' => $id_kupon]);
+		echo '<script type="text/javascript">window.history.go(-1)</script>';
+   	}
 
 	public function report()
 	{

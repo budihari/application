@@ -89,6 +89,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
            
            <td style="width:65%;">: <?= $user->resi; ?></td>
        </tr>
+       <tr>
+           <td style="width:30%; min-width:120px;">Status Pengiriman</td>
+           <td style="width:65%;">: <?= $response; ?></td>
+       </tr>
    </table>
    <div class="row">
       <div class="col-md-11">

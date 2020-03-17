@@ -16,16 +16,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <table class="table table-striped table-bordered dt-responsive nowrap" id="datatable">
                <thead>
                   <tr>
-                     <th width="2%">#</th>
-                     <th>ID Kupon</th>
-                     <th>Nama Kupon</th>
-                     <th>Deskripsi Kupon</th>
-                     <th>Potongan</th>
-                     <th>Stok Kupon</th>
-                     <th>Min. Pembelian</th>
-                     <th>Batas Peruser</th>
-                     <th>Periode</th>
-                     <th>Opsi</th>
+                     <th width="5%">#</th>
+                     <th width="55%">Keterangan</th>
+                     <th width="15%">Potongan</th>
+                     <th width="15%">Min. Bayar</th>
+                     <th width="10%">Opsi</th>
                   </tr>
                   <?php
                     $i = 1;
@@ -33,15 +28,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   ?>
                   <tr>
                       <td><?=$i++;?></td>
-                      <td><?=$kupon->id_kupon;?></td>
-                      <td><?=$kupon->nama_kupon;?></td>
-                      <td><?=$kupon->deskripsi_kupon;?></td>
-                      <td><?=$kupon->persen."% max Rp ".number_format($kupon->potongan, 0, ',', '.');?></td>
-                      <td><?=$kupon->stok_kupon;?></td>
-                      <td><?="Rp ".number_format($kupon->min_bayar, 0, ',', '.');?></td>
-                      <td><?=$kupon->batas_peruser;?></td>
-                      <td><?=$kupon->batas_waktu.' hari';?></td>
-                      <td></td>
+                      <td>
+                         ID Kupon : <?=$kupon->id_kupon;?><br>
+                         Nama Kupon : <?=$kupon->nama_kupon;?><br>
+                         Deskripsi : <?=$kupon->deskripsi_kupon;?><br>
+                         Stok Kupon : <?=$kupon->stok_kupon;?><br>
+                         Batas Peruser : <?=$kupon->batas_peruser;?><br>
+                         Masa Berlaku : <?=$kupon->batas_waktu.' hari';?>
+                      </td>
+                      <td style="vertical-align: middle;"><?=$kupon->persen."% max Rp ".number_format($kupon->potongan, 0, ',', '.');?></td>
+                      <td style="vertical-align: middle;"><?="Rp ".number_format($kupon->min_bayar, 0, ',', '.');?></td>
+                      <td style="vertical-align: middle;" class="center"><a href="<?=base_url();?>administrator/edit_kupon/<?=$kupon->id_kupon;?>"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;&nbsp;
+                      <a style="color: #b00;" href="<?=base_url();?>administrator/delete_kupon/<?=$kupon->id_kupon;?>" onclick="return confirm('Yakin Ingin Menghapus Data ini ?')"><i class="fa fa-trash"></i></a>
+                     </td>
                   </tr>
                   <?php
                     endforeach;

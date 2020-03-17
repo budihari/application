@@ -179,7 +179,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
          <td>unique code</td><td><span class="bariol-regular">rp </span><span id="unique" class="nopadding bariol-regular"><?php echo $uniq;?></span></td>
       </tr>
       <tr>
-         <td>discount</td><td><span class="bariol-regular">rp </span><span id="discount"><?= number_format($discount, 0, ',', ','); ?></span></td>
+         <td>discount</td><td><span class="bariol-regular">rp </span>-<span id="discount"><?= number_format($discount, 0, ',', ','); ?></span></td>
       </tr>
       <tr>
          <td colspan="2"><hr style="margin: 6px 0px;"></td>

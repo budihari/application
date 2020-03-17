@@ -372,8 +372,39 @@ class Transaksi extends CI_Controller {
 						JOIN t_detail_order do ON (o.id_order = do.id_order)
 						JOIN t_items i ON (do.id_item = i.id_item)";
 
-      $data['data'] = $this->trans->select_where($select, $table, ['o.id_order' => $this->uri->segment(3)]);
+	  $data['data'] = $this->trans->select_where($select, $table, ['o.id_order' => $this->uri->segment(3)]);
+	  $cek = $data['data']->row();
+	  $api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
+	 
+$curl = curl_init();
 
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "https://pro.rajaongkir.com/api/waybill",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "waybill=".$cek->resi."&courier=".$cek->kurir,
+  CURLOPT_HTTPHEADER => array(
+    "content-type: application/x-www-form-urlencoded",
+    "key: ".$api->api_key
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+  $result = $response;
+}
+	 
+	  $data['response'] = $result;
       $this->template->admin('admin/detail_transaksi', $data);
    }
 

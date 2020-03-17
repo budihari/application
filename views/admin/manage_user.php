@@ -23,5 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
          </tbody>
       </table>
       <p class="help-text">* Button active untuk menonaktifkan user, button non active untuk mengaktifkan user</p>
+   <div>
+      <a href="user/subscriber" class="btn btn-primary">Lihat data subscriber</a>
+      <a href="user/pesan" class="btn btn-primary">Lihat pesan yg masuk</a>
+   </div>
    </div>
 </div>
