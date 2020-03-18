@@ -200,19 +200,24 @@ else{
       ?>
    </div>
 
+<?php
+if(!empty($response)){
+?>
    <div style="width: 100%; min-height: 100px; border:solid 1px #ddd; padding: 12px; margin-top: 12px; border-radius: 12px;">
       <p style="line-height: 24px;" class="nopadding bariol-regular nomargin">
       <b><u>shipping history</u></b><br>
-      <table style="width: 100%;" cellpadding="8" border="1">
+      <table style="width: 100%; border:#ddd;" cellpadding="8" border="1">
          <tr>
             <td style="font-weight: bold; font-size:14px;">time</td><td style="font-weight: bold; font-size:14px;">detail</td>
          </tr>
          <?php
-         echo $response;
+         echo strtolower($response);
          ?>
       </table>
    </div>
-
+<?php
+}
+?>
 <br>
 <br>
 </div>

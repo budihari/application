@@ -94,6 +94,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    <div class="row">
       <div class="col-md-11">
          <h2>History Pengiriman</h2>
+         <?php
+         if($status == 1){
+         ?>
          <table style="width: 100%;">
          <tr>
             <th style="width: 35%;">Waktu</th><th style="width: 65%;">Keterangan</th>
@@ -104,6 +107,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
          }
          ?>
          </table>
+         <?php
+         }
+         else{
+            echo $response;
+         }
+         ?>
       </div>
    </div>
    <hr>
