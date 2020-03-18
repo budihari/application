@@ -89,14 +89,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
            
            <td style="width:65%;">: <?= $user->resi; ?></td>
        </tr>
-       <tr>
-           <td style="width:30%; min-width:120px;">Status Pengiriman</td>
-           <td style="width:65%;">: <?= $response; ?></td>
-       </tr>
    </table>
+   <hr>
    <div class="row">
       <div class="col-md-11">
-         Bukti Pembayaran<br>
+         <h2>History Pengiriman</h2>
+         <table style="width: 100%;">
+         <tr>
+            <th style="width: 35%;">Waktu</th><th style="width: 65%;">Keterangan</th>
+         </tr>
+         <?php
+         if(!empty($response)){
+            echo $response;
+         }
+         ?>
+         </table>
+      </div>
+   </div>
+   <hr>
+   <div class="row">
+      <div class="col-md-11">
+         <h2>Bukti Pembayaran</h2>
          <?php
          if(!empty($user->bukti)){
          ?>
@@ -106,7 +119,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
          ?>
       </div>
    </div>
-   <br />
+   <hr>
    <div class="x_content">
       <div class="row">
          <div class="col-md-8 col-sm-12">

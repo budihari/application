@@ -1409,6 +1409,56 @@ public function login()
 		if($user->email != $order->email){
 			redirect('home/transaksi');
 		}
+
+$api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
+
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "https://pro.rajaongkir.com/api/waybill",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 30,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "POST",
+  CURLOPT_POSTFIELDS => "waybill=".$order->resi."&courier=".$order->kurir,
+  CURLOPT_HTTPHEADER => array(
+    "content-type: application/x-www-form-urlencoded",
+    "key: ".$api->api_key
+  ),
+));
+
+$response = curl_exec($curl);
+$err = curl_error($curl);
+
+curl_close($curl);
+
+if ($err) {
+  echo "cURL Error #:" . $err;
+} else {
+	$result = json_decode($response, TRUE)['rajaongkir']['result']['manifest'];
+	$html = "";
+
+	$arr = array();
+
+	for ($i=0; $i < count($result); $i++) {
+		$a = $result[$i]['manifest_date'].' '.$result[$i]['manifest_time'].'_'.$result[$i]['manifest_description'];
+		array_push($arr, $a);
+	}
+
+	sort($arr);
+
+	for ($i=0; $i < count($arr); $i++) {
+		$get = $arr[$i];
+		$result = explode("_",$get);
+		$html .= '<tr>
+		<td>'.$result[0].'</td><td>'.$result[1].'</td>
+		</tr>
+		';
+	}
+}
+		$data['response'] = $html;
 		$data['detail_order'] = $this->app->get_where('t_detail_order', ['id_order' => $this->uri->segment(3)]);
 		$data['pembayaran'] = $this->app->get_where('buktipembayaran', ['id_order' => $this->uri->segment(3)]);
 		$data['fav'] = $this->app->get_where('t_favorite', ['id_user' => $this->session->userdata('user_id')]);

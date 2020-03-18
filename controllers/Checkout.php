@@ -1118,7 +1118,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->input->post('kupon', TRUE)]);
 				if($kupon->num_rows() == 1){
 					$kupon = $kupon->row();
-					if($kupon->kategori == 'ongkir'){
+					if($kupon->kategori == 'ongkir' && $this->cart->total() >= $kupon->min_bayar){
 						if($biaya[0] < $kupon->potongan){
 							$diskon = $biaya[0];
 							}
@@ -1126,18 +1126,20 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 								$diskon = $kupon->potongan;
 							}
 							$datauser = array (
+								'nama_kupon' => $kupon->id_kupon,
 								'discount' => $diskon
 							);
 							$this->session->set_userdata($datauser);
+							$deskripsi = '<span style="line-height:18px;">'.strtolower($kupon->deskripsi_kupon).'</span>';
 					}
 				}
 				$total = $this->cart->total() + $biaya[0] + $this->session->userdata('uniq') - $this->session->userdata('discount');
 				$datauser = array (
     		    'cost' => $biaya[0]
     		     );
-          			$this->session->set_userdata($datauser);
+				  $this->session->set_userdata($datauser);
 
-				echo $biaya[0].','.$total.','.$diskon;
+				echo $biaya[0].',,'.$total.',,'.$diskon.',,'.$deskripsi;
 			}
 		}
 	}

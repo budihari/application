@@ -634,7 +634,7 @@ else{
                      method: "POST",
                      data: { layanan : layanan, kupon:kupon },
                      success: function(obj) {
-                        var hasil = obj.split(",");
+                        var hasil = obj.split(",,");
 
                         $('#ongkos').val(hasil[0]);
                         $('#total').val(convertToRupiah(hasil[1]));
@@ -645,6 +645,7 @@ else{
                         document.getElementById("ongkir").innerHTML = convertToRupiah(hasil[0]);
                         document.getElementById("ongkir2").innerHTML = convertToRupiah(hasil[0]);
                         document.getElementById("discount").innerHTML = convertToRupiah(hasil[2]);
+                        document.getElementById("text_coupon").innerHTML = hasil[3];
                         //document.getElementById("ongkir3").innerHTML = convertToRupiah(hasil[0]);
                      }
                   });

@@ -401,10 +401,43 @@ curl_close($curl);
 if ($err) {
   echo "cURL Error #:" . $err;
 } else {
-  $result = $response;
+	$result = json_decode($response, TRUE)['rajaongkir']['result']['manifest'];
+	$html = "";
+
+	$arr = array();
+
+	for ($i=0; $i < count($result); $i++) {
+		$a = $result[$i]['manifest_date'].' '.$result[$i]['manifest_time'].'_'.$result[$i]['manifest_description'];
+		array_push($arr, $a);
+	}
+
+	sort($arr);
+
+	for ($i=0; $i < count($arr); $i++) {
+		$get = $arr[$i];
+		$result = explode("_",$get);
+		$html .= '<tr>
+		<td>'.$result[0].'</td><td>'.$result[1].'</td>
+		</tr>
+		';
+	}
+	
+	//$html = rtrim($html,'<br>');
+
+	$data['response'] = $html;
+	/*
+	$result = json_decode($response, TRUE);
+	$html = $result['rajaongkir']['query']['waybill'];
+	
+	for ($i=0; $i < count($result['rajaongkir']['results']['manifest']); $i++) {
+	   $html .= '<span>'.$result['rajaongkir']['results']['manifest'][$i]['manifest_description'].'</span><br>';
+	}
+
+	$data['response'] = $html;
+	*/
 }
 	 
-	  $data['response'] = $result;
+	  
       $this->template->admin('admin/detail_transaksi', $data);
    }
 
