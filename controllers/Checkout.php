@@ -1113,6 +1113,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 			if ($this->form_validation->run() == TRUE)
 			{
+				$deskripsi = "";
 				$biaya = explode(',', $this->encryption->decrypt($this->input->post('layanan', TRUE)));
 				$diskon = $this->session->userdata('discount');
 				$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->input->post('kupon', TRUE)]);

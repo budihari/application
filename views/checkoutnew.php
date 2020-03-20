@@ -191,7 +191,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <tr>
          <td colspan="2">&nbsp;</td>
       </tr>
-      <tr><td colspan="2"><span style="font-size: 12px;">by clicking "pay now" you agree to all our <a class="blue-text" href="syarat-dan-ketentuan">terms and conditions</a>.</span></td></tr>
+      <tr><td colspan="2"><span style="font-size: 12px;">by clicking "pay now" you agree to all our <a class="blue-text" href="terms-and-conditions">terms and conditions</a>.</span></td></tr>
       <tr class="desktop">
          <td colspan="2">
             <div>

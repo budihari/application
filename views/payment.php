@@ -101,3 +101,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <br><br>
 </div>
 </div>
+
+<script>
+$(document).ready(function() {
+//change upload
+document.getElementById("uploadBtn").onchange = function () {
+document.getElementById("uploadFile").value = this.value;
+};
+});
+</script>

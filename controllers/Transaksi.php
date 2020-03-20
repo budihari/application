@@ -24,6 +24,7 @@ class Transaksi extends CI_Controller {
 		$data = $this->trans->select_where($select, 't_order', ['status_proses' => 'delivery process']);
 		$cek = $data->row();
 		$api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
+
 		if($data->num_rows() > 0){
 			foreach ($data->result() as $cek) :
 			if(!empty($cek->resi)){
@@ -52,58 +53,35 @@ class Transaksi extends CI_Controller {
 			if ($err) {
 			  echo "cURL Error #:" . $err;
 			} else {
-				$result = json_decode($response, TRUE)['rajaongkir'];
-				print_r($result);
 				$html = "";
+				$item = "";
+				$result = json_decode($response, TRUE)['rajaongkir'];
+				//print_r($result);
+				if($result['status']['code'] == 400){
+					$html = $result['status']['description'];
+					$item = 'invalid waybill';
+				}
+				elseif($result['status']['code'] == 200){
+					$html = $result['result']['delivery_status']['status'].' to '.$result['result']['delivery_status']['pod_receiver'].' | '.$result['result']['delivery_status']['pod_date'].' '.$result['result']['delivery_status']['pod_time'];
+					$item = strtolower($result['result']['summary']['status']);
+				}
+				$status['status_proses'] = $item;
+				$status['status_pengiriman'] = $html;
+				$this->db->update('t_order', $status, array('id_order' => $cek->id_order));
 			}
 			}
 			endforeach;
 		}
+
 		$this->template->admin('admin/transaksi');
    }
 
 	public function ajax_list()
-   {
+   	{
     $list = $this->trans->get_datatables();
     $data = array();
     $no = $_POST['start'];
 	$today = date('Y-m-d');
-	
-	function tracking($resi,$kurir){
-		if(!empty($resi)){
-		$api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
-	  	$curl = curl_init();
-			
-			curl_setopt_array($curl, array(
-			  CURLOPT_URL => "https://pro.rajaongkir.com/api/waybill",
-			  CURLOPT_RETURNTRANSFER => true,
-			  CURLOPT_ENCODING => "",
-			  CURLOPT_MAXREDIRS => 10,
-			  CURLOPT_TIMEOUT => 30,
-			  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			  CURLOPT_CUSTOMREQUEST => "POST",
-			  CURLOPT_POSTFIELDS => "waybill=".$resi."&courier=".$kurir,
-			  CURLOPT_HTTPHEADER => array(
-				"content-type: application/x-www-form-urlencoded",
-				"key: ".$api->api_key
-			  ),
-			));
-			
-			$response = curl_exec($curl);
-			$err = curl_error($curl);
-			
-			curl_close($curl);
-			
-			if ($err) {
-			  echo "cURL Error #:" . $err;
-			} else {
-				$result = json_decode($response, TRUE)['rajaongkir'];
-				//print_r($result);
-				$html = $result['status']['description'];
-			}
-		} //end if !empty($resi)
-		return $html;
-   	} //end function
 
       foreach ($list as $i) {
 
@@ -123,7 +101,6 @@ class Transaksi extends CI_Controller {
 					$btn = '';
 				}
 			}
-		$status = tracking($i->resi,$i->kurir);
 		 $tgl_pesan = date('d M Y / H:i:s', strtotime($i->tgl_pesan));
 		 $bts_bayar = date('d M Y / H:i:s', strtotime($i->bts_bayar));
 		 $waktu_pesan = explode(" / ",$tgl_pesan);
@@ -136,7 +113,7 @@ class Transaksi extends CI_Controller {
          $row[] = $waktu_pesan[0].'<br>'.$waktu_pesan[1];
 		 $row[] = $bts_waktu[0].'<br>'.$bts_waktu[1];
 		 $row[] = "Rp ".number_format($i->total, 0, ',', '.');
-		 $row[] = $i->status_proses.'<br>'.$status;
+		 $row[] = $i->status_proses;
          $row[] = '<a href="'.base_url().'transaksi/detail/'.$i->id_order.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>'.$btn;
 
          $data[] = $row;
@@ -459,6 +436,9 @@ class Transaksi extends CI_Controller {
 	  $api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
 	  $html = "";
 
+$data['status'] = 0;
+$data['response'] = 'nomor resi belum di input';
+
 if(!empty($cek->resi)){
 $curl = curl_init();
 
@@ -485,10 +465,9 @@ curl_close($curl);
 if ($err) {
   echo "cURL Error #:" . $err;
 } else {
-	$result = json_decode($response, TRUE)['rajaongkir'];
-	print_r($result);
+	$result = json_decode($response, TRUE)['rajaongkir']['result']['manifest'];
+	//print_r($result);
 	$html = "";
-/*
 	$arr = array();
 	if(!empty($result)){
 	for ($i=0; $i < count($result); $i++) {

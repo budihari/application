@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Trans extends CI_Model {
 
    var $table  = 't_order';
-   var $select = array('id_order', 'tgl_pesan', 'bts_bayar', 'kurir', 'total', 'nama_pemesan', 'status_proses', 'bukti', 'bukti_pengiriman', 'resi');
+   var $select = array('id_order', 'tgl_pesan', 'bts_bayar', 'kurir', 'total', 'nama_pemesan', 'status_proses', 'status_pengiriman', 'bukti', 'bukti_pengiriman', 'resi');
 
    var $column_order    = array(
                               null,

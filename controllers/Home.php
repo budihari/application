@@ -40,12 +40,12 @@ class Home extends CI_Controller {
       	$data['metadeskripsi'] = "anda dapat melihat katalog bath & kitchen, waterpumps, water filters, home & living untuk keperluan rumah anda";
 		$this->template->olshop('home', $data);
 	  } //end if home
-		//else if uri segment is not home
-		
-		
-	  elseif($this->uri->segment(3) != 'home'){
-            echo 'tes';
-		}
+	}
+
+	public function terms_and_condition()
+	{
+      	$data['title'] 		= "terms and condition";
+		$this->template->olshop('terms', $data);
 	}
 
 	public function search()

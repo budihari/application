@@ -429,7 +429,7 @@ else{
    </div>
    <div class="quicklinks vpadding">
       <h3>quicklinks</h3>
-      <p style="padding: 0px 12px;"><a style="font-size: 14px;" href="#">terms &amp; conditions</a><br>
+      <p style="padding: 0px 12px;"><a style="font-size: 14px;" href="<?php echo base_url('terms-and-conditions');?>">terms &amp; conditions</a><br>
       <a style="font-size: 14px;" href="#">privacy policy</a><br>
       <a style="font-size: 14px;" href="#">faq</a></p>
    </div>
