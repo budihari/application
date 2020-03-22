@@ -44,8 +44,269 @@ class Home extends CI_Controller {
 
 	public function terms_and_condition()
 	{
-      	$data['title'] 		= "terms and condition";
+		$data['title'] 		= "terms and condition";
+		$data['keterangan'] = $this->lang_terms();
 		$this->template->olshop('terms', $data);
+	}
+
+	public function lang_terms()
+	{
+		//if (!$this->input->is_ajax_request()) {
+
+		//	redirect('terms-and-conditions');
+
+		//} else {
+			if(empty($this->input->post('lang', TRUE))){
+				$lang = 'eng';
+			}
+			else{
+				$lang = $this->input->post('lang', TRUE);
+			}
+$ind = '
+<div id="ind" class="content">
+<div class="header" style="position:relative; margin:auto; max-width:800px;">
+    <h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">SYARAT & KETENTUAN</h1>
+    <div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; z-index:3;">
+    <div>
+    	<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
+		<span style="background:rgba(100,100,100,0.5); position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>&nbsp;&nbsp;
+		<div class="flag-icon flag-icon-id" onclick="change(\'ind\')">
+		<span style="position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>
+    </div>
+    </div>
+</div>
+<div style="border: solid 1px #ddd; padding:12px; border-radius:12px; max-width:800px; margin:auto; background:#fff; max-height:600px; overflow-y:scroll; position:relative;">
+
+<ol type="a" style="padding:0px 12px; padding-inline-start:26px;">
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Ketentuan Umum</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Dengan menggunakan, berbelanja dan mendaftarkan diri Anda di waterplus.com, berarti Anda
+setuju untuk terikat dan patuh pada syarat dan ketentuan yang berlaku.</li>
+        <li>Syarat dan ketentuan ini dapat berubah sewaktu-waktu dan kami tidak berkewajiban untuk
+memberitahukannya kepada Anda.</li>
+        <li>Syarat dan ketentuan ini kami buat untuk kepentingan bersama, untuk menjaga hak dan kewajiban
+masing-masing pihak, dan tidak dimaksudkan untuk merugikan salah satu pihak.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Informasi Produk</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Dengan melakukan transaksi pemesanan secara online di waterplus.com, Anda kami anggap telah
+mengerti informasi produk yang akan Anda beli.</li>
+        <li>Produk yang tersedia di waterplus.com sesuai dengan katalog online dan detail produk. Kami
+berusaha menyajikan data seakurat mungkin tanpa rekayasa agar Anda selaku pembeli tidak
+dirugikan.</li>
+        <li>Perbedaan warna dalam foto/gambar produk yang kami tampilkan di waterplus.com bisa
+diakibatkan oleh faktor pencahayaan dan setting/resolusi monitor komputer, dan karena itu tidak
+dapat dijadikan acuan.</li>
+        <li>Harga produk dalam situs ini adalah benar pada saat dicantumkan.</li>
+        <li>Harga yang tercantum adalah harga produk semata, tidak termasuk ongkos kirim. Ongkos kirim
+dihitung otomatis (berdasarkan harga dari jasa ekspedisi) sesuai dengan alamat pengiriman yang
+Anda berikan pada saat transaksi pemesanan.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pemesanan dan Pembatalan</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Pemesanan bisa Anda lakukan untuk tujuan pengiriman ke seluruh wilayah yang terlayani oleh
+pihak jasa ekspedisi yang kami tunjuk. Untuk mempercepat proses pemesanan, silakan konfirmasi
+ke Customer Service kami setelah Anda melakukan pemesanan.</li>
+        <li>Keterangan mengenai produk dan cara belanja di waterplus.com kami anggap telah Anda pelajari
+terlebih dahulu.</li>
+        <li>Kami meng-update informasi produk hanya pada produk yang harus diupdate. Tetapi, jika ada
+kesalahan teknis yang menyebabkan harga, stok, atau informasi lainnya menjadi tidak benar dan
+Anda terlanjur melakukan pemesanan, maka kami akan menginformasikan dan memberi pilihan
+kepada Anda untuk tetap memesan produk tersebut atau membatalkannya.</li>
+        <li>Kami memberikan batas waktu pembayaran selama 1x24 jam sejak Anda menyelesaikan transaksi
+pembelian. Apabila Anda belum melakukan pembayaran setelah batas waktu tersebut, maka kami
+dapat membatalkan pesanan Anda.</li>
+        <li>Pembatalan pesanan dapat Anda lakukan sebelum pembayaran. Jika Anda telah melakukan
+pembayaran, pesanan tidak dapat Anda batalkan. Anda hanya diperbolehkan melakukan penukaran
+pesanan dengan produk lain sesuai jumlah pembayaran yang Anda tunaikan. Penukaran pesananakan diproses melalui transaksi offline. Silakan hubungi Customer Service kami melalui telepon
+atau email.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pembayaran</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Mata uang yang dipakai untuk pembayaran adalah Rupiah (Rp).</li>
+        <li>Pembayaran bisa melalui transfer ke rekening bank yang kami informasikan kepada Anda.</li>
+        <li>Pembayaran dianggap lunas jika uang telah kami terima sesuai dengan jumlah yang harus
+dibayarkan. Segera lakukan konfirmasi kepada kami melalui fitur Konfirmasi Pembayaran yang
+tersedia di waterplus.com.</li>
+        <li>Keterlambatan proses transfer antarbank bukan tanggung jawab kami.</li>
+        <li>Kelalaian penulisan rekening dan informasi lainnya atau kelalaian pihak bank pada saat Anda melakukan pembayaran bukan tanggung jawab kami.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pengiriman</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Pesanan Anda akan kami kirim segera setelah pembayaran lunas. Status pengiriman / nomor resi akan kami informasikan melalui fitur "order->view invoice" di waterplus.com. Jika diperlukan, nomor resi pengiriman dapat kami informasikan melalui email Anda.</li>
+        <li>Pesanan Anda akan kami kirim ke alamat yang Anda berikan saat transaksi pemesanan.</li>
+        <li>Kesalahan Anda dalam memberikan alamat pengiriman sehingga menyebabkan paket kiriman
+        tidak sampai atau tidak Anda terima bukan tanggung jawab kami.</li>
+        <li>Pengiriman dilakukan oleh pihak jasa ekspedisi yang kami tunjuk sebagaimana telah kami
+        tampilkan saat Anda melakukan transaksi pemesanan. Biaya pengiriman ditanggung oleh pembeli.</li>
+        <li>Lama waktu pengiriman menyesuaikan paket ekspedisi yang Anda pilih saat transaksi pemesanan. Jaminan kepastian waktu pengiriman sepenuhnya menjadi tanggung jawab pihak jasa ekspedisi. Konpensasi atas keterlambatan dan atau kehilangan barang sepenuhnya tunduk pada peraturan pihak jasa ekspedisi.</li>
+        <li>Anda dapat memantau status pengiriman melalui layanan “tracking” pada website dan Call
+        Center pihak jasa ekspedisi yang bersangkutan. Anda juga dapat meminta bantuan kami untuk
+        mengetahui status pengiriman pesanan Anda.</li>
+        <li>Setelah paket kiriman Anda terima, segera konfirmasikan kepada kami melalui layanan "Hubungi Kami" atau informasi kontak kami (telp/email) yang tersedia di Tokoalvabet.com. Apabila Anda tidak melakukan konfirmasi penerimaan barang setelah 7 (tujuh) hari dari batas waktu perkiraan kiriman sampai di tujuan, maka kami anggap kiriman tersebut telah Anda terima.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Penukaran Produk</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Kami pastikan pesanan Anda telah kami cek ulang sesuai data pesanan serta kami kemas dengan baik sebelum kami kirim. Pada saat menerima paket kiriman, Anda wajib melakukan pengecekan terhadap kondisi produk.</li>
+        <li>Jika produk yang Anda terima tidak sesuai data pesanan atau terdapat cacat produksi, maka produk tersebut dapat ditukarkan dengan produk yang sama kepada kami.</li>
+        <li>Biaya pengiriman/pengembalian produk tidak sesuai pesanan atau cacat produksi kepada kami ditanggung oleh pembeli, sedangkan biaya pengiriman produk pengganti kepada Anda ditanggung oleh kami.</li>
+        <li>Pemberitahuan penerimaan produk tidak sesuai pesanan atau cacat produksi kami layani paling lambat 7 (tujuh) hari sejak produk Anda terima. Jika dalam batas waktu tersebut tidak ada pemberitahuan, maka produk yang kami kirimkan dianggap telah sesuai dengan data pesanan Anda dan tidak cacat produksi.</li>
+        <li>Produk pengganti akan kami kirimkan kepada Anda segera setelah kami menerima dan
+        memverifikasi pengembalian produk tidak sesuai pesanan atau cacat produksi dari Anda.
+        Cantumkan keterangan mengenai produk yang Anda kirimkan kembali kepada kami untuk
+        memudahkan kami melakukan verifikasi.</li>
+        <li>Jika stok produk pengganti tidak tersedia di gudang, kami akan mengirimkannya setelah stok produk kembali tersedia. Dan jika stok produk pengganti telah habis, Anda dapat menukarnya dengan produk lain yang harganya sama (atau setara) atau Anda dapat meminta pengembalian uang sesuai jumlah yang telah Anda bayarkan kepada kami.</li>
+        <li>Produk yang Anda beli di luar waterplus.com tidak dapat dikembalikan/ditukarkan kepada kami.</li>
+    </ol>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pengembalian Uang (Refund)</h2>
+    <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+        <li>Pengembalian uang (refund) hanya berlaku untuk produk yang Anda tukarkan dan kami tidak dapat mengirimkan kembali produk pengganti kepada Anda karena stok habis.</li>
+        <li>Pengembalian uang dilakukan dalam waktu 10 hari kerja, terhitung sejak tanggal kesepakatan refund.</li>
+        <li>Besarnya uang yang dikembalikan sesuai dengan jumlah yang tertera pada invoice untuk produk tersebut, ditambah ongkos kirim penukaran/pengembalian dari Anda kepada kami; sedangkan ongkos pengiriman produk dari kami kepada Anda tidak dapat diminta kembali.</li>
+        <li>Pengembalian uang dilakukan melalui transfer ulang ke rekening Anda.</li>
+        <li>Kami akan memberikan konfirmasi kepada Anda dalam bentuk email bahwa pengembalian uang
+        telah kami lakukan.</li>
+    </ol>
+</li>
+</ol>
+
+</div>
+<br><br>
+</div>
+';
+
+$eng = '
+<div id="eng" class="content">
+<div class="header" style="position:relative; margin:auto; max-width:800px;">
+	<h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">TERMS & CONDITIONS</h1>
+	<div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; z-index:3;">
+	<div>
+		<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
+		<span style="position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>&nbsp;&nbsp;
+		<div class="flag-icon flag-icon-id" onclick="change(\'ind\')">
+		<span style="background:rgba(100,100,100,0.5); position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>
+	</div>
+	</div>
+</div>
+<div style="border: solid 1px #ddd; padding:12px; border-radius:12px; max-width:800px; margin:auto; background:#fff; max-height:600px; overflow-y:scroll; position:relative;">
+
+<ol type="a" style="padding:0px 12px; padding-inline-start:26px;">
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">general requirements</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>by using, shopping and registering yourself at waterplus.com, you agree to be bound and abide by the terms and conditions that apply.</li>
+		<li>these terms and conditions are subject to change at any time and we are not obliged to inform you.</li>
+		<li>we make these terms and conditions for the common good, to protect the rights and obligations of each party, and are not intended to harm either party.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">product information</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>By making an order transaction online at waterplus.com, we assume you understand the product information that you will buy.</li>
+		<li>Products available at waterplus.com according to the online catalog and product details. We strive to present data as accurately as possible without engineering so that you as the buyer are not disadvantaged.</li>
+		<li>Color differences in the photos / images of products that we display on Waterplus.com can be caused by lighting factors and computer monitor settings / resolutions, and therefore cannot be used as a reference.</li>
+		<li>Product prices on this site are correct at the time of listing.</li>
+		<li>The price listed is the price of the product alone, not including postage. Shipping costs are calculated automatically (based on the price of the shipping service) according to the shipping address you provided at the time of the order transaction.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">reservations and cancellations</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>You can place an order for the purpose of shipping to all areas served by the shipping service that we designate. To speed up the order process, please confirm to our customer service after you place an order.</li>
+		<li>information about the product and how to shop at waterplus.com we assume you have learned it first.</li>
+		<li>We update product information only on products that must be updated. However, if there is a technical error that causes the price, stock, or other information to be incorrect and you have already placed an order, we will inform you and give you the choice to continue to order the product or cancel it.</li>
+		<li>We provide a payment deadline of 1x24 hours since you complete a purchase transaction. If you have not made payment after the deadline, then we can cancel your order.</li>
+		<li>Cancellation of the order you can do before payment. If you have made a payment, you cannot cancel the order. You are only allowed to exchange orders with other products according to the payment amount that you are paying. Exchange orders will be processed through offline transactions. please contact our customer service via telephone or email.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">payment</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>The currency used for payment is Rupiah (Rp).</li>
+		<li>payment can be through a transfer to a bank account that we inform you.</li>
+		<li>payment is considered to be paid off if the money we have received in accordance with the amount to be paid. immediately confirm to us through the payment confirmation feature available at waterplus.com.</li>
+		<li>delays in the process of interbank transfers are not our responsibility.</li>
+		<li>negligence of account writing and other information or negligence of the bank when you make payment is not our responsibility.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">delivery</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>Your order will be sent immediately after payment is paid. We will inform you of the delivery status / receipt number via the "order-> view invoice" feature on waterplus.com. if needed, we can inform the shipping receipt number via your email.</li>
+		<li>Your order will be sent to the address you provided during the order transaction.</li>
+		<li>Your mistake in giving the delivery address so that the package does not arrive or you do not receive is not our responsibility.</li>
+		<li>delivery is carried out by the shipping service that we designate as we have shown when you make an order transaction. Shipping costs borne by the buyer.</li>
+		<li>the shipping time adjusts the shipping package that you chose during the order transaction. guaranteed delivery time is fully the responsibility of the shipping service. compensation for the delay and / or loss of goods is fully subject to the regulations of the shipping service.</li>
+		<li>You can monitor the status of the shipment through the "tracking" service on the website and the call center of the expedition service provider. You can also ask for our help to find out the delivery status of your order.</li>
+		<li>After the package you have received, immediately confirm with us via the "contact us" service or our contact information (tel / email) available at tokoalvabet.com. If you do not confirm receipt of goods after 7 (seven) days from the time limit for the estimated shipment to arrive at the destination, then we assume that you have received the shipment.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">product exchange</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>we make sure your order has been re-checked according to the order data and we pack it well before we send. when receiving a shipment package, you must check the condition of the product.</li>
+		<li>If the product you receive does not match the order data or there is a production defect, then the product can be exchanged for the same product for us.</li>
+		<li>The cost of shipping / returning the product does not match the order or production defects to us borne by the buyer, while the cost of shipping the replacement product to you is borne by us.</li>
+		<li>notification of receipt of products not according to order or production defects we serve no later than 7 (seven) days from the product you receive. if within the time limit there is no notification, then the product we send is considered to be in accordance with your order data and is not defective in production.</li>
+		<li>We will send a replacement product to you as soon as we receive and verify a product return that does not match the order or production defect from you. include information about the product you sent back to us to make it easier for us to verify.</li>
+		<li>If the replacement product stock is not available in the warehouse, we will send it after the product stock is available again. and if the replacement product stock has run out, you can exchange it for other products that have the same price (or equivalent) or you can request a refund according to the amount you have paid to us.</li>
+		<li>Products that you buy outside of Waterplus.com cannot be returned / exchanged with us.</li>
+	</ol>
+</li>
+
+<li>
+	<h2 style="font-size: 20px; padding:12px 6px;">Refunds</h2>
+	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
+		<li>Refunds only apply to the product you are exchanging and we cannot send you a replacement product again because the stock is out.</li>
+		<li>Refunds are made within 10 working days, starting from the date of the refund agreement.</li>
+		<li>the amount of money returned is in accordance with the amount stated on the invoice for the product, plus the exchange / return shipping cost from you to us, while the cost of shipping the product from us to you is not refundable.</li>
+		<li>Refunds are made via a re-transfer to your account.</li>
+		<li>We will provide confirmation to you in the form of an email that we have refunded.</li>
+	</ol>
+</li>
+</ol>
+
+</div>
+<br><br>
+</div>
+';
+if (!$this->input->is_ajax_request()) {
+
+	return strtolower($$lang);
+
+}
+else{
+	echo strtolower($$lang);
+}
+		//}
 	}
 
 	public function search()
