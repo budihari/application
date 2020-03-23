@@ -81,6 +81,9 @@ class Pembayaran extends CI_Controller {
 	  $table = 't_order o
 	  JOIN t_users usr ON (o.email = usr.email)';
 	  $cek = $this->bayar->get_where($table, array('o.id_order' => $this->uri->segment(3))) -> row();
+	  if($cek->status_proses != 'not paid'){
+		  redirect('pembayaran');
+	  }
 	  if ($this->input->post('formbayar', TRUE) == 'Submit') {
 		//validasi
 		$this->form_validation->set_rules('idbayar', 'ID Bayar', 'required|min_length[4]');
@@ -252,10 +255,13 @@ class Pembayaran extends CI_Controller {
 		<table cellpadding="8" style="width:100%;">
 		'.$table.'
             <tr>
-            <td>discount</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
-            </tr>
+            <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+			</tr>
+			<tr>
+			<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+			</tr>
             <tr>
-            <td>delivery</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+            <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
             </tr>
         <tr>
             <td colspan="3"><hr style="margin:0px;"></td>
@@ -284,16 +290,13 @@ class Pembayaran extends CI_Controller {
 		);
 		if ($this->email->send())
 		{
-			echo '<script type="text/javascript">
-			alert("berhasil dikirim");
-			</script>';
+			redirect('transaksi');
 		}
 		else{
 			echo '<script type="text/javascript">
 			alert("gagal dikirim");
 			</script>';
 		}
-		redirect('transaksi');
       //echo '<script type="text/javascript">window.history.go(-1)</script>';
    }
 
@@ -392,13 +395,15 @@ class Pembayaran extends CI_Controller {
   <div style="padding: 0px 4px;">
 	  <table cellpadding="8" style="width:100%;">
 	  '.$table.'
-		  <tr>
-		  <td>discount</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
-		  </tr>
-		  <tr>
-		  <td>delivery</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
-		  </tr>
-  
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
 	  <tr>
 		  <td colspan="3"><hr style="margin:0px;"></td>
 	  </tr>
@@ -429,9 +434,11 @@ class Pembayaran extends CI_Controller {
 		  redirect('pembayaran');
 	  }
 	  else{
-		  redirect('pembayaran');
+		  echo '<script type="text/javascript">
+		  alert("gagal dikirim");
+		  </script>';
 	  }
-	  //redirect('pembayaran');
+	//redirect('pembayaran');
 	  
 	//echo '<script type="text/javascript">window.history.go(-1)</script>';
    }
