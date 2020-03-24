@@ -49,6 +49,348 @@ class Home extends CI_Controller {
 		$this->template->olshop('terms', $data);
 	}
 
+	public function privacy_policy()
+	{
+		$data['title'] 		= "privacy policy";
+		$data['keterangan'] = $this->lang_privacy();
+		$this->template->olshop('privacy', $data);
+	}
+
+	public function lang_privacy()
+	{
+
+		if(empty($this->input->post('lang', TRUE))){
+			$lang = 'eng';
+		}
+		else{
+			$lang = $this->input->post('lang', TRUE);
+		}
+
+$ind = '
+<div id="ind" class="content">
+<div class="header" style="position:relative; margin:auto; max-width:800px;">
+    <h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">Kebijakan Privasi</h1>
+    <div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; cursor:pointer; z-index:3;">
+    <div>
+    	<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
+		<span style="background:rgba(100,100,100,0.5); position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>&nbsp;&nbsp;
+		<div class="flag-icon flag-icon-id" onclick="change(\'ind\')">
+		<span style="position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>
+    </div>
+    </div>
+</div>
+<div class="corner">
+
+<ol type="1" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pendahuluan</h2>
+    <p></p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Tentang kebijakan ini</h2>
+    <p>
+Adanya Kebijakan Privasi ini adalah komitmen nyata dari waterplus.com untuk menghargai dan
+melindungi setiap informasi pribadi Pengguna situs waterplus.com ini. Kebijakan ini menjadi acuan
+yang mengatur dan melindungi penggunaan data dan informasi penting para pengguna situs toko
+online ini, yang telah dikumpulkan pada saat mendaftar, mengakses dan menggunakan layanan ini,
+seperti alamat e-mail, nomor telepon, foto, gambar, dan lain-lain.
+    </p>
+    <h3>Kebijakan privasi kami :</h3>
+    <ul>
+        <li>
+        Seluruh informasi pribadi yang Anda berikan kepada waterplus.com hanya akan digunakan
+        dan dilindungi oleh waterplus.com. Setiap informasi yang Anda berikan terbatas untuk
+        tujuan proses yang berkaitan dengan waterplus.com dan tanpa tujuan lainnya.
+        </li>
+        <li>
+        Kami dapat mengubah Kebijakan Privasi ini dari waktu ke waktu dengan melakukan
+        pengurangan ataupun penambahan ketentuan pada halaman ini. Anda dianjurkan untuk
+        membaca Kebijakan Privasi ini secara berkala agar mengetahui perubahan-perubahan
+        terbaru.
+        </li>
+        <li>
+        Kami sangat memperhatikan betul keamanan dan privasi pelanggan kami, dan kami hanya
+        akan mengumpulkan informasi pribadi Anda yang hanya kami perlukan untuk kepentingan
+        internal kami saja. Perlindungan data dan informasi pelanggan merupakan privasi yang
+        harus kami jaga penuh untuk menjaga kepercayaan Anda terhadap kami.
+        </li>
+        <li>
+        Kami hanya akan menggunakan data dan informasi Anda sebagaimana yang dinyatakan
+        dalam Kebijakan Privasi berikut. Kami hanya akan mengumpulkan dan menggunakan
+        informasi yang berhubungan dengan transaksi kami dengan Anda.
+        </li>
+        <li>
+        waterplus.com tidak bertanggung jawab atas pertukaran data yang dilakukan sendiri di
+        antara pengguna situs
+        </li>
+        <li>
+        Kami hanya akan menyimpan informasi privasi Anda sepanjang kami diwajibkan oleh
+        hukum atau selama informasi tersebut masih berhubungan dengan tujuan awal pengumpulan
+        informasi tersebut.
+        </li>
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Informasi apa yang kami kumpulkan</h2>
+    <ul>
+		<li>
+		Kami tidak akan memperjualbelikan informasi pribadi pelanggan yang dikumpulkan secara
+		online kepada pihak ketiga.
+		</li>
+		<li>
+		Informasi pribadi yang dikumpulkan secara online akan dibagi didalam perusahaan hanya
+		untuk kepentingan internal kami, ketika Anda membuat akun di web kami, informasi pribadi
+		yang kami kumpulkan termasuk:
+		<ol>
+		<li>Nama</li>
+		<li>Alamat Surat Elektronik / Email</li>
+		<li>Telepon dan atau kontak lainnya</li>
+		<li>Alamat Pengiriman</li>
+		<li>Nomor Rekening</li>
+		</ol>
+		</li>
+		<li>
+		Informasi yang akan kami kumpulkan dari Anda akan digunakan untuk hal-hal seperti:
+		<ol>
+		<li>Mengirimkan produk yang telah Anda beli di web kami</li>
+		<li>Menginformasikan kepada Anda tentang pengiriman barang dan bantuan oleh
+		cutomer service kami</li>
+		<li>Memberikan informasi produk yang relevan kepada Anda</li>
+		<li>Memproses pesanan Anda dan memberikan layanan dan informasi yang ditawarkan
+		melalui situs kami dan atas permintaan Anda</li>
+		<li>Melakukan konfirmasi pembayaran dari Anda dan atau pengembalian pembayaran</li>
+		</ol>
+		</li>
+
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Kapan kami mengumpulkan informasi anda</h2>
+	<p>
+	Data akan dikumpulkan pada saat anda mendaftar, mengakses dan menggunakan layanan kami,
+	seperti alamat e-mail, nomor telepon, foto, gambar, dan lain-lain.
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Bagaimana kami menggunakan informasi anda</h2>
+	<ul>
+	<li>
+	Kami akan menggunakan informasi yang Anda berikan untuk memverifikasi dan
+	menjalankan transaksi finansial yang berhubungan dengan pembayaran online yang telah
+	Anda lakukan, mengidentifikasi pengunjung dalam situs kami, menjalankan penelitian
+	demografis pengguna kami, mengirimkan informasi, mengirimkan informasi yang kami
+	anggap penting bagi Anda atau informasi yang telah Anda minta dari kami, seperti informasi
+	tentang produk dan layanan kami, apabila Anda telah menyatakan bahwa Anda tidak
+	keberatan menerima informasi-informasi seperti ini.
+	</li>
+	<li>
+	Kami hanya dapat memberikan nama dan alamat Anda kepada pihak ketiga untuk tujuan
+	pengiriman produk kepada Anda yaitu kepada kurir/ekspedisi guna pengiriman pesanan
+	Anda.
+	</li>
+	<li>
+	Pembayaran yang Anda buat melalui situs akan diproses oleh kami secara langsung. Anda
+	hanya boleh memberikan informasi pembayaran kepada kami atas informasi yang akurat dan
+	tidak menyesatkan dan Anda harus memberitahukan informasi dan perubahan-perubahan
+	terbaru pada kami.
+	</li>
+	<li>
+	Rincian pesanan Anda akan kami simpan dan kami dapat mengaksesnya secara langsung.
+	Anda juga dapat mengakses informasi ini dengan masuk ke dalam akun website
+	waterplus.com. Di sana Anda dapat melihat rincian dari pesanan yang telah dilakukan,
+	pesanan yang masih terbuka dan pesanan yang sedang diproses dan mendaftarkan rincian
+	alamat. Anda harus memperlakukan akses data personal ini secara rahasia dan tidak
+	memberikannya kepada pihak ketiga yang tidak sah. Kami tidak bertanggungjawab atas
+	penyalahgunaan password kecuali penyalahgunaan ini adalah kesalahan kami.
+	</li>
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Perubahan pada kebijakan privasi</h2>
+	<p>
+	Kami memiliki hak untuk mengganti dan mengubah Pernyataan Privasi pada waktu kapan saja
+	tanpa memberitahukan anda terlebih dahulu. Anda dianjurkan untuk membaca Kebijakan Privasi ini
+	secara berkala agar mengetahui perubahan-perubahan terbaru.
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Pengaduan pelanggaran privasi</h2>
+	<p>
+	Bila Anda merasa tidak puas dengan bagaimana kami menangani keluhan atau aduan Anda, jangan
+	ragu-ragu untuk menghubungi kami di info@waterplus.com
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">Hak waterplus+</h2>
+	<p>
+	Anda memahami dan menyetujui bahwa waterplus+ memiliki hak untuk mengungkapkan informasi
+	pribadi Anda pada setiap hukum, peraturan, pemerintahan, pajak, penegak hukum atau pemerintah
+	atau pemilik hak terkait, jika waterplus+ memiliki alasan wajar yang dapat dipercaya bahwa
+	pengungkapan informasi pribadi Anda diperlukan untuk kewajiban apapun, sebagai persyaratan
+	atau pengaturan, baik sukarela atau wajib sebagai akibat dari pesanan, pemeriksaan dan atau
+	permintaan pihak terkait. Sejauh diizinkan oleh hukum yang berlaku, dalam hal ini Anda setuju
+	untuk tidak melakukan tuntutan apapun terhadap waterplus+ untuk pengungkapkan informasi
+	pribadi Anda.
+	</p>
+</li>
+
+</ol>
+
+</div>
+<br><br>
+</div>';
+
+$eng = '
+<div id="ind" class="content">
+<div class="header">
+    <h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">Privacy Policy</h1>
+    <div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; cursor:pointer; z-index:3;">
+    <div>
+    	<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
+		<span style="position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>&nbsp;&nbsp;
+		<div class="flag-icon flag-icon-id" onclick="change(\'ind\')">
+		<span style="background:rgba(100,100,100,0.5); position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
+		</div>
+    </div>
+    </div>
+</div>
+<div class="corner">
+
+<ol type="1" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">introduction</h2>
+    <p></p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">about this policy</h2>
+    <p>
+	the existence of this privacy policy is a real commitment from waterplus.com to respect and protect any personal information of users of this waterplus.com site. This policy becomes a reference that regulates and protects the use of important data and information of users of this online store site, which has been collected when registering, accessing and using this service, such as e-mail addresses, telephone numbers, photos, images, etc.
+    </p>
+    <h3>our privacy policy:</h3>
+    <ul>
+        <li>
+        all personal information that you provide to waterplus.com will only be used and protected by waterplus.com. any information you provide is limited to the purpose of the process relating to waterplus.com and without other purposes.
+        </li>
+        <li>
+        We may change this privacy policy from time to time by making reductions or adding provisions to this page. You are encouraged to read this privacy policy periodically to be aware of the latest changes.
+        </li>
+        <li>
+        We are very concerned about the security and privacy of our customers, and we will only collect your personal information which we only need for our internal purposes. Data protection and customer information is a privacy that we must take full care of to maintain your trust in us.
+        </li>
+        <li>
+        we will only use your data and information as stated in the following privacy policy. we will only collect and use information related to our transactions with you.
+        </li>
+        <li>
+        waterplus.com is not responsible for the exchange of data that is carried out among users of the site.
+        </li>
+        <li>
+        we will only store your privacy information as long as we are required by law or as long as the information is related to the original purpose of collecting the information.
+        </li>
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">what information we collect</h2>
+    <ul>
+		<li>
+		We will not trade customer personal information collected online to third parties.
+		</li>
+		<li>
+		personal information collected online will be shared within the company only for our internal purposes, when you create an account on our website, the personal information we collect includes:
+		<ol>
+		<li>Name</li>
+		<li>electronic mail / email address</li>
+		<li>telephone and or other contacts</li>
+		<li>shipping address</li>
+		<li>account number</li>
+		</ol>
+		</li>
+		<li>
+		the information that we will collect from you will be used for things like:
+		<ol>
+		<li>send the product that you have purchased on our web</li>
+		<li>Inform you about the shipping of goods and assistance by our service cutomer</li>
+		<li>provide relevant product information to you</li>
+		<li>process your order and provide services and information offered through our site and at your request</li>
+		<li>confirm payment from you and or refund the payment</li>
+		</ol>
+		</li>
+
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">when we collect your information</h2>
+	<p>
+	data will be collected when you register, access and use our services, such as e-mail addresses, telephone numbers, photos, images, etc.
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">how we use your information</h2>
+	<ul>
+	<li>
+	we will use the information you provide to verify and carry out financial transactions related to online payments that you have made, identify visitors on our site, carry out demographic research of our users, send information, send information that we consider important to you or information that is important to you You have requested from us, such as information about our products and services, if you have stated that you have no objection to receiving such informatio
+	</li>
+	<li>
+	We can only provide your name and address to third parties for the purpose of shipping the product to you, namely to the courier / expedition for shipping your order.
+	</li>
+	<li>
+	Payments that you make through the site will be processed by us directly. You may only provide payment information to us for information that is accurate and not misleading and you must provide information and the latest changes to us.
+	</li>
+	<li>
+	we will save your order details and we can access them directly. You can also access this information by logging into the waterplus.com website account. there you can see details of orders that have been placed, orders that are still open and orders that are being processed and register the address details. You must treat this access to personal data confidentially and not give it to unauthorized third parties. We are not responsible for misuse of passwords unless this abuse is our fault.
+	</li>
+    </ul>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">changes to privacy policy</h2>
+	<p>
+	We have the right to change and change the privacy statement at any time without notifying you in advance. You are encouraged to read this privacy policy periodically to be aware of the latest changes.
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">complaints of invasion of privacy</h2>
+	<p>
+	If you are not satisfied with how we handle your complaint or complaint, do not hesitate to contact us at info@waterplus.com
+	</p>
+</li>
+
+<li>
+    <h2 style="font-size: 20px; padding:12px 6px;">waterplus+ rights</h2>
+	<p>
+	You understand and agree that Waterplus + has the right to disclose your personal information to any law, regulation, government, tax, law enforcement or government or related rights owner, if Waterplus + has reasonable reasons that can be trusted that the disclosure of your personal information is required for any obligation, as a requirement or arrangement, either voluntary or mandatory as a result of an order, inspection and or request from related parties. to the extent permitted by applicable law, in this case you agree not to make any demands on waterplus + to disclose your personal information.
+	</p>
+</li>
+
+</ol>
+
+</div>
+<br><br>
+</div>';
+
+		if (!$this->input->is_ajax_request()) {
+			return strtolower($$lang);
+		}
+		else{
+			echo strtolower($$lang);
+		}
+
+	}
+
 	public function lang_terms()
 	{
 		//if (!$this->input->is_ajax_request()) {
@@ -64,9 +406,9 @@ class Home extends CI_Controller {
 			}
 $ind = '
 <div id="ind" class="content">
-<div class="header" style="position:relative; margin:auto; max-width:800px;">
+<div class="header">
     <h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">SYARAT & KETENTUAN</h1>
-    <div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; z-index:3;">
+    <div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; cursor:pointer; z-index:3;">
     <div>
     	<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
 		<span style="background:rgba(100,100,100,0.5); position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
@@ -79,7 +421,12 @@ $ind = '
 </div>
 <div style="border: solid 1px #ddd; padding:12px; border-radius:12px; max-width:800px; margin:auto; background:#fff; max-height:600px; overflow-y:scroll; position:relative;">
 
-<ol type="a" style="padding:0px 12px; padding-inline-start:26px;">
+<p style="font-size:14px; line-height:18px; padding-bottom:0px;">
+Selamat datang di www.waterplus.com.</p>
+<p style="font-size:14px; line-height:18px; padding-bottom:0px;">Syarat & ketentuan yang ditetapkan di bawah ini mengatur syarat dan ketentuan atas produk atau barang yang ditawarkan oleh situs www.waterplus.com. Pengguna disarankan membaca dengan seksama karena dapat berdampak kepada hak dan kewajiban Pengguna di bawah hukum.</p>
+<p style="font-size:14px; line-height:18px;">Dengan mendaftar dan/atau menggunakan situs www.waterplus.com, maka pengguna dianggap telah membaca, mengerti, memahami dan menyetujui semua isi dalam syarat & ketentuan. Syarat & ketentuan ini merupakan bentuk kesepakatan yang dituangkan dalam sebuah perjanjian yang sah. Jika pengguna tidak menyetujui salah satu, sebagian, atau seluruh isi syarat & ketentuan, maka pengguna tidak diperkenankan menggunakan layanan di www.waterplus.com.
+</p>
+<ol type="a" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
 <li>
     <h2 style="font-size: 20px; padding:12px 6px;">Ketentuan Umum</h2>
     <ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
@@ -104,9 +451,7 @@ dirugikan.</li>
 diakibatkan oleh faktor pencahayaan dan setting/resolusi monitor komputer, dan karena itu tidak
 dapat dijadikan acuan.</li>
         <li>Harga produk dalam situs ini adalah benar pada saat dicantumkan.</li>
-        <li>Harga yang tercantum adalah harga produk semata, tidak termasuk ongkos kirim. Ongkos kirim
-dihitung otomatis (berdasarkan harga dari jasa ekspedisi) sesuai dengan alamat pengiriman yang
-Anda berikan pada saat transaksi pemesanan.</li>
+        <li>harga yang tercantum adalah harga produk semata, tidak termasuk ongkos kirim. ongkos kirim dihitung otomatis (berdasarkan harga dari jasa pihak ketiga) sesuai dengan alamat pengiriman yang anda berikan pada saat transaksi pemesanan.</li>
     </ol>
 </li>
 
@@ -198,9 +543,9 @@ tersedia di waterplus.com.</li>
 
 $eng = '
 <div id="eng" class="content">
-<div class="header" style="position:relative; margin:auto; max-width:800px;">
+<div class="header">
 	<h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">TERMS & CONDITIONS</h1>
-	<div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; z-index:3;">
+	<div style="background:rgba(100,100,100,0.5); padding:6px; position:absolute; bottom:-27px; right:16px; width:auto; text-align:right; cursor:pointer; z-index:3;">
 	<div>
 		<div class="flag-icon flag-icon-gb" onclick="change(\'eng\')">
 		<span style="position:absolute; top:0; left:0; width:100%;">&nbsp;</span>
@@ -213,7 +558,12 @@ $eng = '
 </div>
 <div style="border: solid 1px #ddd; padding:12px; border-radius:12px; max-width:800px; margin:auto; background:#fff; max-height:600px; overflow-y:scroll; position:relative;">
 
-<ol type="a" style="padding:0px 12px; padding-inline-start:26px;">
+<p style="font-size:14px; line-height:18px; padding-bottom:0px;">
+welcome to www.waterplus.com.</p>
+<p style="font-size:14px; line-height:18px; padding-bottom:0px;">the terms & conditions set forth below govern the terms and conditions for the products or goods offered by the website www.waterplus.com. users are advised to read carefully because it can impact the rights and obligations of users under the law.</p>
+<p style="font-size:14px; line-height:18px;">by registering and / or using the website www.waterplus.com, the user is deemed to have read, understood, understood and agreed to all the contents in the terms & conditions. These terms & conditions are a form of agreement as outlined in a valid agreement. if the user does not agree to one, some, or all of the contents of the terms & conditions, then the user is not permitted to use the service at www.waterplus.com.
+</p>
+<ol type="a" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
 <li>
 	<h2 style="font-size: 20px; padding:12px 6px;">general requirements</h2>
 	<ol style="font-size:14px; text-align:justify; line-height: 20px; margin:0; padding-inline-start:26px;">
@@ -230,7 +580,7 @@ $eng = '
 		<li>Products available at waterplus.com according to the online catalog and product details. We strive to present data as accurately as possible without engineering so that you as the buyer are not disadvantaged.</li>
 		<li>Color differences in the photos / images of products that we display on Waterplus.com can be caused by lighting factors and computer monitor settings / resolutions, and therefore cannot be used as a reference.</li>
 		<li>Product prices on this site are correct at the time of listing.</li>
-		<li>The price listed is the price of the product alone, not including postage. Shipping costs are calculated automatically (based on the price of the shipping service) according to the shipping address you provided at the time of the order transaction.</li>
+		<li>the price listed is the price of the product alone, not including postage. Shipping costs are calculated automatically (based on prices from third party services) according to the shipping address you provided at the time of the order transaction.</li>
 	</ol>
 </li>
 
@@ -299,9 +649,7 @@ $eng = '
 </div>
 ';
 if (!$this->input->is_ajax_request()) {
-
 	return strtolower($$lang);
-
 }
 else{
 	echo strtolower($$lang);

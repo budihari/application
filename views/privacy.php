@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <script>
 function change(data){
    $.ajax({
-      url: "<?=base_url();?>home/lang_terms",
+      url: "<?=base_url();?>home/lang_privacy",
       method: "POST",
       data: { lang:data },
       success: function(obj) {
