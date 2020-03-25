@@ -13,15 +13,9 @@ class Transaksi extends CI_Controller {
    public function index()
    {
 		$this->cek_login();
-
-		$select = [
-			'id_order',
-			'resi',
-			'kurir',
-			'status_proses'
-		];
-
-		$data = $this->trans->select_where($select, 't_order', ['status_proses' => 'delivery process']);
+		$query = "select id_order,resi,kurir,status_proses from t_order where status_proses = 'on process' or status_proses = 'delivery process' and resi != ''";
+		$data = $this->db->query($query);
+		//$data = $this->db->get('t_order');
 		$cek = $data->row();
 		$api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
 
@@ -54,17 +48,22 @@ class Transaksi extends CI_Controller {
 			  echo "cURL Error #:" . $err;
 			} else {
 				$html = "";
-				$item = "";
+				$item = $cek->status_proses;
 				$result = json_decode($response, TRUE)['rajaongkir'];
 				//print_r($result);
+				$sp = strtolower($result['result']['summary']['status']);
 				if($result['status']['code'] == 400){
 					$html = $result['status']['description'];
 					$item = 'invalid waybill';
 				}
 				elseif($result['status']['code'] == 200){
 					$html = $result['result']['delivery_status']['status'].' to '.$result['result']['delivery_status']['pod_receiver'].' | '.$result['result']['delivery_status']['pod_date'].' '.$result['result']['delivery_status']['pod_time'];
-					$item = strtolower($result['result']['summary']['status']);
+					if($sp != 'on process'){
+						$item = strtolower($result['result']['summary']['status']);
+					}
+					
 				}
+				
 				$status['status_proses'] = $item;
 				$status['status_pengiriman'] = $html;
 				$this->db->update('t_order', $status, array('id_order' => $cek->id_order));
@@ -609,13 +608,23 @@ if ($err) {
         <tr>
             <td style="width: 50%;"><p><b>ID order</b><br>'.$order->id_order.'</p></td>
             <td style="width: 50%;"><p><b>order date</b><br>'.date('d M Y', strtotime($order->tgl_pesan)).'</p></td>
-        </tr>
+		</tr>
+		
+		<tr>
+		<td valign="top"><p><b>courier information</b><br>
+			<span style="font-size: 14px; line-height: 20px;">'.$order->kurir.'<br>('.$order->service.')
+		</p></td>
+		<td valign="top">
+			<p><b>tracking number</b><br>'.$this->input->post('resi').'</p>
+		</td>
+		</tr>
+
         <tr>
             <td valign="top"><p><b>address</b><br>
                 <span style="font-size: 14px; line-height: 20px;">'.$order->nama_pemesan.'<br>'.$alamat.'<br>'.$alamat1.'<br>phone: '.$order->telepon.'</span>
             </p></td>
             <td valign="top">
-                <p><b>status</b><br>'.$order->status_proses.'</p>
+                <p><b>status</b><br>delivery process</p>
             </td>
         </tr>
         <tr>
