@@ -466,23 +466,28 @@ class Pembayaran extends CI_Controller {
          redirect('pembayaran');
       }
 
-      $select = [
-						'idpembayaran',
-						'iduser',
-						'id_order',
-						'tgl_pesan',
-						'tgl_pembayaran',
-						'namapengirim',
-						'bank_asal',
-						'jumlah_transfer',
-						'bank_tujuan',
-						'bukti',
-						'status'
+      $bayar = [
+				'idpembayaran',
+				'iduser',
+				'id_order',
+				'tgl_pesan',
+				'tgl_pembayaran',
+				'namapengirim',
+				'bank_asal',
+				'jumlah_transfer',
+				'bank_tujuan',
+				'bukti',
+				'status'
 					];
+	  $order = [
+				'total'
+	  ];
 
       $table = "buktipembayaran";
 
-      $data['data'] = $this->bayar->select_where($select, $table, ['idpembayaran' => $this->uri->segment(3)]);
+	  $data['data'] = $this->bayar->select_where($bayar, $table, ['idpembayaran' => $this->uri->segment(3)]);
+	  $bayar = $data['data']->row();
+	  $data['t_order'] = $this->bayar->select_where($order, 't_order', ['id_order' => $bayar->id_order])->row();
 
       $this->template->admin('admin/detail_pembayaran', $data);
    }

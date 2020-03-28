@@ -311,7 +311,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 		<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
 			<div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
 			<div class="content" style="padding: 12px;">
-			<p>hi '.$nama.'</p>
+			<p>hi '.$nama_pemesan.'</p>
 			<p>one more step and this item will be yours! don\'t wait until it runs out, complete the process now.</p>
 			<div>
                 <p>please complete the payment before the item runs out.</p>
@@ -438,15 +438,18 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 			$this->cart->destroy();
 
-				$key['key']    = $this->app->get_where('t_profil', ['id_profil' => 1]);
+				//$key['key']    = $this->app->get_where('t_profil', ['id_profil' => 1]);
 
 					$this->email->from($profil->email_toko, $profil->title);
-		        	$this->email->to(
-		        	    array($admin->email,'m.ilham@waterplus.com','brian.chandra@waterplus.com')
-		        	    );
+		        	//$this->email->to(
+		        	//    array($admin->email,'m.ilham@waterplus.com','brian.chandra@waterplus.com')
+					//	);
+					$this->email->to(
+						array($admin->email)
+						);
 		        	$this->email->subject('Pesanan Masuk');
 		        	$this->email->message(
-					  'Hai admin,<br /><br />Ada pesanan baru dari '.$profil->title.' dengan ID pesanan '.$id_order.' pada tanggal '.date('d M Y', strtotime($tgl_pesan)).'. Silahkan login untuk melihat detail pesanan secara lengkap.
+					  'Hai admin,<br /><br />Ada pesanan baru dari '.$nama_pemesan.' dengan ID pesanan '.$id_order.' pada tanggal '.date('d M Y', strtotime($tgl_pesan)).'. Silahkan login untuk melihat detail pesanan secara lengkap.
 			<hr>
 			<table style="width: 100%;" cellpadding="12">
 				<tr>
@@ -488,33 +491,9 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 					if ($this->email->send())
 					{
-				$key['key']    = $this->app->get_where('t_profil', ['id_profil' => 1]);
-		        $key['title']  = "payment info";
-		        $key['user'] = $user;
-				$key['nama'] = $nama;
-				$key['phone'] = $phone;
-				$key['id_order'] = $id_order;
-				$key['provinsi'] = $provinsi;
-				$key['kabupaten'] = $kabupaten;
-				$key['kota'] = $kota;
-				$key['alamat'] = $alamat;
-				$key['pos'] = $pos;
-				$key['kurir'] = $kurir;
-				$key['layanan'] = $layanan;
-				$key['service'] = $service;
-				$key['ongkir'] = $ongkir;
-				$key['potongan'] = $potongan;
-				$key['total'] = $total;
-				$key['tgl_pesan'] = $tgl_pesan;
-				$key['tglpesan'] = $tglpesan;
-				$key['bts'] = $bts;
-				$key['bts_bayar'] = $bts_bayar;
-				$key['rekening'] = $rekening;
-				$key['ongkir'] = $layanan[0];
-				$key['table'] = $table;
-
+						
 					}
-				}
+				} // end if ($this->app->insert('t_order', $data))
 				else{
 				    echo "data tidak tersimpan";
 				}
@@ -1006,17 +985,31 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 	public function discount()
 	{
-		$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->input->post('coupon')]);
+		$total = $this->cart->total();
+		echo $this->get_discount('diskon',$this->input->post('coupon'),$this->input->post('ongkir'),$total);
+		//echo $diskon.',,'.$total.',,'.$deskripsi;
+	}
+
+	public function get_discount($tipe=null,$id_kupon=null,$biaya_ongkir,$total)
+	{
+		date_default_timezone_set("Asia/Bangkok");
+		$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $id_kupon]);
 		$ongkir = 0;
-		if(!empty($this->input->post('ongkir'))){
-			$layanan 	= explode(",", $this->encryption->decrypt($this->input->post('ongkir')));
+		if(!empty($biaya_ongkir)){
+			$layanan 	= explode(",", $this->encryption->decrypt($biaya_ongkir));
 			$ongkir 	= $layanan[0];
 		}
 		$deskripsi = "";
 		if($kupon->num_rows() == 1){
 			$kupon = $kupon->row();
-			$diskon = $kupon->persen * $this->cart->total() / 100;
-			if($this->cart->total() >= $kupon->min_bayar){
+			$diskon = $kupon->persen * $total / 100;
+			$username = $this->session->userdata('username');
+			$today = date("Y-m-d");
+			$jarak = 0 - $kupon->batas_waktu;
+			$date = date('Y-m-d',strtotime($jarak.' day',strtotime($today)));;
+			if($total >= $kupon->min_bayar){
+				$query1 = "SELECT o.kupon,usr.id_user,usr.username FROM t_order o JOIN t_users usr ON (o.email = usr.email) WHERE o.tgl_pesan BETWEEN '$today' and '$date' and o.kupon = '$kupon->id_kupon' and usr.username = '$username'";
+				$cek1 = $this->db->query($query1);
 				if($kupon->kategori != 'ongkir'){
 					if($diskon > $kupon->potongan){
 						$diskon = $kupon->potongan;
@@ -1065,14 +1058,22 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				'discount' => '0'
 					);
 			$this->session->set_userdata($datauser);
-			if(!empty($this->input->post('coupon', TRUE))){
+			if(!empty($id_kupon)){
 				$deskripsi = '<span style="color:red;">coupon not found</span>';
 			}
 		}
 		$diskon = $this->session->userdata('discount');
 		//$ongkir = str_replace(array(',', '.'), "", $this->input->post('ongkir', TRUE));
-		$total = $this->cart->total() + $ongkir + $this->session->userdata('uniq') - $this->session->userdata('discount');
-		echo $diskon.',,'.$total.',,'.$deskripsi;
+		$totalbayar = $total + $ongkir + $this->session->userdata('uniq') - $this->session->userdata('discount');
+		if($tipe=='diskon'){
+			$result = $diskon.',,'.$totalbayar.',,'.$deskripsi;
+			return $result;
+		}
+		else if($tipe=='ongkir'){
+			$result = $ongkir.',,'.$totalbayar.',,'.$diskon.',,'.$deskripsi;
+			return $result;
+		}
+		
 	}
 
 	public function unique()
@@ -1113,34 +1114,15 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 
 			if ($this->form_validation->run() == TRUE)
 			{
-				$deskripsi = "";
-				$biaya = explode(',', $this->encryption->decrypt($this->input->post('layanan', TRUE)));
-				$diskon = $this->session->userdata('discount');
-				$kupon 	= $this->db->get_where('kupon', ['id_kupon' => $this->input->post('kupon', TRUE)]);
-				if($kupon->num_rows() == 1){
-					$kupon = $kupon->row();
-					if($kupon->kategori == 'ongkir' && $this->cart->total() >= $kupon->min_bayar){
-						if($biaya[0] < $kupon->potongan){
-							$diskon = $biaya[0];
-							}
-							else{
-								$diskon = $kupon->potongan;
-							}
-							$datauser = array (
-								'nama_kupon' => $kupon->id_kupon,
-								'discount' => $diskon
-							);
-							$this->session->set_userdata($datauser);
-							$deskripsi = '<span style="line-height:18px;">'.strtolower($kupon->deskripsi_kupon).'</span>';
-					}
-				}
-				$total = $this->cart->total() + $biaya[0] + $this->session->userdata('uniq') - $this->session->userdata('discount');
+				$total = $this->cart->total();
+				echo $this->get_discount('ongkir',$this->input->post('kupon'),$this->input->post('layanan'),$total);
+				/*
 				$datauser = array (
     		    'cost' => $biaya[0]
     		     );
 				  $this->session->set_userdata($datauser);
-
-				echo $biaya[0].',,'.$total.',,'.$diskon.',,'.$deskripsi;
+				 */
+				//echo $biaya[0].',,'.$total.',,'.$diskon.',,'.$deskripsi;
 			}
 		}
 	}

@@ -41,6 +41,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    </div>
    <div class="row">
       <div class="col-md-2 col-sm-4">
+         Total
+      </div>
+      <div class="col-md-10 col-sm-8">
+         : <?= "Rp ".number_format($t_order->total, 0, ',', '.'); ?>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-md-2 col-sm-4">
          Tanggal Bayar
       </div>
       <div class="col-md-10 col-sm-8">
