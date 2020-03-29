@@ -6,6 +6,8 @@ $tanggal = explode("-", $waktu[0]);
 $tgl = $tanggal[2];
 $bulan = $tanggal[1];
 $tahun = $tanggal[0];
+$today = date("Y-m-d H:i:s");
+$date = date('Y-m-d',strtotime($waktu[0]));
 /*
 echo '<!DOCTYPE html>
           <html>
@@ -52,38 +54,7 @@ echo '
             <h1 style="font-size: 14px;">please complete the payment before the item runs out.</h1>
             <div style="text-align: center; background: #ddd; padding:12px; font-size: 12px; border-radius:8px;">
                 <p>remaining time for your payment</p>
-                <p id="demo"></p>
-
-                <script>
-                    // Set the date we\'re counting down to
-                    var countDownDate = Date.parse("'.$bulan.' '.$tgl.', '.$tahun.' '.$waktu[1].'");
-                    
-                    // Update the count down every 1 second
-                    var x = setInterval(function() {
-                    
-                      // Get today\'s date and time
-                      var now = new Date().getTime();
-                        
-                      // Find the distance between now and the count down date
-                      var distance = countDownDate - now;
-                        
-                      // Time calculations for days, hours, minutes and seconds
-                      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                        
-                      // Output the result in an element with id="demo"
-                      document.getElementById("demo").innerHTML = \'<table cellpadding="8" style="margin: auto; text-align: center; width:auto; font-size: 12px;"><tr><td style="font-size: 24px;">\' + hours + \'<br><span style="font-size: 12px;">hour</span></td><td  style="font-size: 24px;">:</td><td style="font-size: 24px;">\' + minutes + \'<br><span style="font-size: 12px;">minute</span></td><td style="font-size: 24px;">:</td><td style="font-size: 24px;">\' + seconds + \'<br><span style="font-size: 12px;">second</span></td></tr></table>\';
-                        
-                      // If the count down is over, write some text 
-                      if (distance < 0) {
-                        clearInterval(x);
-                        document.getElementById("demo").innerHTML = "<h3>EXPIRED</h3>";
-                      }
-                    }, 1000);
-                    </script>
-
+                <div class=\'countdown\' data-date="'.$date.'" data-time="'.$waktu[1].'"></div>
                 <p>(before '.$waktu[0].' '.$waktu[1].' WIB)</p>
             </div>
             <br>
@@ -192,6 +163,84 @@ echo $table;
     ?>
 </table>
 </div>
+<script>
+(function ( $ ) {
+	function pad(n) {
+	    return (n < 10) ? ("0" + n) : n;
+	}
+
+	$.fn.showclock = function() {
+	    
+	    var currentDate=new Date();
+	    var fieldDate=$(this).data('date').split('-');
+	    var fieldTime=[0,0];
+	    if($(this).data('time')!=undefined)
+	    fieldTime=$(this).data('time').split(':');
+	    var futureDate=new Date(fieldDate[0],fieldDate[1]-1,fieldDate[2],fieldTime[0],fieldTime[1],fieldTime[2]);
+	    var seconds=futureDate.getTime() / 1000 - currentDate.getTime() / 1000;
+
+	    if(seconds<=0 || isNaN(seconds)){
+            
+	    	this.hide();
+	    	return this;
+	    }
+
+	    var days=Math.floor(seconds/86400);
+	    seconds=seconds%86400;
+	    
+	    var hours=Math.floor(seconds/3600);
+	    seconds=seconds%3600;
+
+	    var minutes=Math.floor(seconds/60);
+	    seconds=Math.floor(seconds%60);
+	    
+	    var html="";
+
+	    if(days!=0){
+		    html+="<div class='countdown-container days'>";
+		    	html+="<span class='countdown-value days-bottom'>"+pad(days)+"</span>";
+		    	html+="<span class='countdown-heading days-top'>Days</span>";
+		    html+="</div>";
+		}
+
+	    html+="<div class='countdown-container hours'>";
+	    	html+="<span class='countdown-value hours-bottom'>"+pad(hours)+"</span>";
+	    	html+="<span class='countdown-heading hours-top'>Hours</span>";
+	    html+="</div>";
+
+	    html+="<div class='countdown-container minutes'>";
+	    	html+="<span class='countdown-value minutes-bottom'>"+pad(minutes)+"</span>";
+	    	html+="<span class='countdown-heading minutes-top'>Minutes</span>";
+	    html+="</div>";
+
+	    html+="<div class='countdown-container seconds'>";
+	    	html+="<span class='countdown-value seconds-bottom'>"+pad(seconds)+"</span>";
+	    	html+="<span class='countdown-heading seconds-top'>Seconds</span>";
+	    html+="</div>";
+
+	    this.html(html);
+	};
+
+	$.fn.countdown = function() {
+		var el=$(this);
+		el.showclock();
+		setInterval(function(){
+			el.showclock();	
+		},1000);
+		
+	}
+
+}(jQuery));
+
+jQuery(document).ready(function(){
+	if(jQuery(".countdown").length>0){
+		jQuery(".countdown").each(function(){
+			jQuery(this).countdown();	
+		})
+		
+	}
+})
+</script>
 <?php
 /*
 		</body>

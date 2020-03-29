@@ -1008,8 +1008,15 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 			$jarak = 0 - $kupon->batas_waktu;
 			$date = date('Y-m-d',strtotime($jarak.' day',strtotime($today)));;
 			if($total >= $kupon->min_bayar){
-				$query1 = "SELECT o.kupon,usr.id_user,usr.username FROM t_order o JOIN t_users usr ON (o.email = usr.email) WHERE o.tgl_pesan BETWEEN '$today' and '$date' and o.kupon = '$kupon->id_kupon' and usr.username = '$username'";
+				if($kupon->batas_waktu == 0){
+					$query1 = "SELECT o.kupon,usr.id_user,usr.username FROM t_order o JOIN t_users usr ON (o.email = usr.email) WHERE o.kupon = '$kupon->id_kupon' and usr.username = '$username'";
+				}
+				else{
+					$query1 = "SELECT o.kupon,usr.id_user,usr.username FROM t_order o JOIN t_users usr ON (o.email = usr.email) WHERE o.tgl_pesan BETWEEN '$date' and '$today' and o.kupon = '$kupon->id_kupon' and usr.username = '$username'";
+				}
 				$cek1 = $this->db->query($query1);
+				$jml = $cek1->num_rows();
+				if($jml < $kupon->batas_peruser){
 				if($kupon->kategori != 'ongkir'){
 					if($diskon > $kupon->potongan){
 						$diskon = $kupon->potongan;
@@ -1041,6 +1048,16 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 						$deskripsi = '<span style="color:red;">choose a courier first</span>';
 					}
 				}
+
+			}
+			else{
+				$datauser = array (
+					'nama_kupon' => '',
+					'discount' => 0
+						);
+				$this->session->set_userdata($datauser);
+				$deskripsi = '<span style="color:red;">Sorry, you have reached the coupon usage limit.</span>';
+			}
 				
 			} //end if $this->cart->total() >= $kupon->min_bayar
 			else{
