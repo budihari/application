@@ -193,8 +193,8 @@ else
       <!-- flickity css -->
       <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
       <!-- customCss -->
-      <link rel="stylesheet" href="<?= base_url('assets/css/custom.css'); ?>">
-      <link rel="stylesheet" href="<?= base_url('assets/css/style.css'); ?>?ver=<?php echo time(); ?>">
+      <link rel="stylesheet" href="<?= base_url('assets/css/custom.css').'?ver='.date('Y-m-d'); ?>">
+      <link rel="stylesheet" href="<?= base_url('assets/css/style.css').'?ver='.date('Y-m-d'); ?>">
       <link rel="stylesheet" href="<?= base_url('assets/css/font-awesome.css'); ?>">
       <link rel="stylesheet" href="<?= base_url('assets/css/table.css'); ?>">
       <style>
@@ -239,7 +239,7 @@ else
       </style>
 <link href="<?= base_url('assets/css/select2.css'); ?>" rel="stylesheet" />
 <link href="<?= base_url('assets/css/jssor.css'); ?>" type="text/css" rel="stylesheet">
-<link href="<?= base_url('assets/css/menu.css').'?ver='.time(); ?>" type="text/css" rel="stylesheet">
+<link href="<?= base_url('assets/css/menu.css').'?ver='.date("Y-m-d"); ?>" type="text/css" rel="stylesheet">
 <script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
 <script src="<?= base_url('assets/js/jssor.js'); ?>"></script>
 <script src="<?= base_url('assets/js/jssor.slider-22.1.9.min.js'); ?>"></script>
@@ -485,7 +485,7 @@ else{
       <!-- materialize -->
       <script src="<?= base_url('assets/js/materialize.min.js'); ?>"></script>
       <script src="<?= base_url('assets/js/custom.js'); ?>"></script>
-      <script src="<?= base_url('assets/js/scripts.js').'?ver='.time(); ?>"></script>
+      <script src="<?= base_url('assets/js/scripts.js').'?ver='.date("Y-m-d"); ?>"></script>
       <script src="<?= base_url('assets/js/jquery.mask.min.js'); ?>"></script>
       <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
       <!-- custom -->

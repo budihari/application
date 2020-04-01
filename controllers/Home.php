@@ -52,7 +52,7 @@ class Home extends CI_Controller {
 	public function privacy_policy()
 	{
 		$data['title'] 		= "privacy policy";
-		$data['keterangan'] = $this->lang_privacy('ind');
+		$data['keterangan'] = $this->lang_privacy('eng');
 		$this->template->olshop('privacy', $data);
 	}
 

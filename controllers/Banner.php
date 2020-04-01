@@ -297,7 +297,7 @@ class Banner extends CI_Controller {
 	{
 		if (!$this->session->userdata('admin'))
 		{
-			redirect('login');
+			redirect('admin');
 		}
 	}
 }

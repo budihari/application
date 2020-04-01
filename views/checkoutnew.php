@@ -155,7 +155,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div style="width: 100%; min-height: 100px; border:solid 1px #ddd; padding: 12px; border-radius: 12px;">
    <p class="nopadding bariol-regular">coupon code</p>
    <hr class="nomargin">
-   <div style="position:relative;">
+   <div style="position:relative; margin:6px 0px;">
    <input id="kupon" style="max-width:calc(100% - 116px); padding:0px 8px;" type="text" name="coupon" value ="<?php echo $nama_kupon;?>" placeholder="apply coupon code">
    <button id="btn_promo" class="btn blue" style="position:absolute; right:0;" type="button" name="coupon_code">apply</button>
    </div>

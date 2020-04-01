@@ -117,6 +117,34 @@ $profile = $profil->row();
                      </li>
                   </ul>
                </li>
+               <li class="">
+                  <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                     <i class="fa fa-envelope"></i> Pesan
+                     <span class=" fa fa-angle-down"></span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-usermenu pull-right" style="overflow-x: hidden;">
+                     <?php
+                     $query = "SELECT * FROM pesan ORDER BY tgl DESC LIMIT 3";
+                     $cek = $this->db->query($query);
+                     foreach($cek->result() as $pesan) :
+                     ?>
+                     <li>
+                        <a href="<?= base_url('user/detail_pesan/').$pesan->idpesan; ?>">
+                           <?php
+                           echo "<span style='white-space:normal; display:-webkit-box; overflow:hidden; -webkit-line-clamp:1; -webkit-box-orient:vertical;'>".$pesan->nama." (".$pesan->subject.")</span>
+                           <span style='white-space:normal; display:-webkit-box; overflow:hidden; -webkit-line-clamp:2; -webkit-box-orient:vertical;'>".$pesan->pesan."</span>
+                           <span>".$pesan->tgl."</span>";
+                           ?>
+                        </a>
+                     </li>
+                     <?php
+                     endforeach;
+                     ?>
+                     <li style="position: sticky; bottom:0px; text-align:center;">
+                        <a href="<?=base_url('user/pesan')?>">Lihat Semua</a>
+                     </li>
+                  </ul> 
+               </li>
             </ul>
          </nav>
       </div>

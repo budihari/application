@@ -220,7 +220,7 @@ class Item extends CI_Controller {
 						'tipe' 	    	        => $this->input->post('type', TRUE),
 						'garansi' 	            => $garansi,
 						'terakhir_update'       => date("Y-m-d h:i:s", time()),
-					    'diubah_oleh'           => $nama_admin
+					    'dibuat'           		=> $nama_admin
 		         	);
 		        	$this->items->insert('t_items', $items);
 		        $performance = $this->input->post('performance')." - ".$this->input->post('unit')." - ".$this->input->post('opsi');
@@ -1243,7 +1243,7 @@ class Item extends CI_Controller {
 	{
 		if (!$this->session->userdata('admin'))
 		{
-			redirect('login');
+			redirect('admin');
 		}
 	}
 }

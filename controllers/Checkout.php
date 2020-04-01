@@ -426,6 +426,11 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 		if ($this->app->insert('t_order', $data)) {
 
 			foreach ($this->cart->contents() as $key) {
+				$id_item = $key['id'];
+				$qty = $key['qty'];
+				$query1 = "SELECT terjual FROM t_items WHERE id_item = '$id_item'";
+				$cek1 = $this->db->query($query1)->row();
+				$terjual = $cek1->terjual + $qty;
 				$detail = [
 					'id_order' 	=> $id_order,
 					'id_item' 	=> $key['id'],
@@ -433,7 +438,11 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 					'biaya' 	=> $key['subtotal'],
 					'catatan' 	=> $key['note']
 				];
+				$t_item = [
+					'terjual' 	=> $terjual
+				];
 				$this->app->insert('t_detail_order', $detail);
+				$this->app->update('t_items', $t_item, array('id_item' => $id_item));
 			}
 
 			$this->cart->destroy();
@@ -1056,7 +1065,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 					'discount' => 0
 						);
 				$this->session->set_userdata($datauser);
-				$deskripsi = '<span style="color:red;">Sorry, you have reached the coupon usage limit.</span>';
+				$deskripsi = '<span style="color:red;">sorry, you have reached the coupon usage limit.</span>';
 			}
 				
 			} //end if $this->cart->total() >= $kupon->min_bayar

@@ -378,8 +378,9 @@ function postForm() {
                      $file = 'pembayaran';
                      break;
                }
-            ?>
 
+            if($this->uri->segment(2) == ''){
+            ?>
             $('#datatable').DataTable({
                "processing": true, //Feature control the processing indicator.
                "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -401,6 +402,9 @@ function postForm() {
 
           });
          });
+         <?php
+            }
+         ?>
          </script>
       <?php } ?>
    </body>

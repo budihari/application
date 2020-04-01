@@ -45,7 +45,7 @@ function ambil_ukuran_gambar($filename){
     return $result;
 }
 if($key->hargapromo != 0){
-  $promo = '<div style="position: absolute; background:#0af; border-radius:8px; padding:12px; right:12px; top:12px; color:white;"><p>promo</p></div>';
+  $promo = '<div style="position: absolute; background:red; border-radius:8px; padding:12px; right:12px; top:12px; color:white;"><p>promo</p></div>';
 }
 else{
   $promo = '';
@@ -173,7 +173,7 @@ $type2 = $key->tipe;
 $promo = '';
 if ($type2 == $type1) {
   if($f->hargapromo != 0){
-    $promo = '<div style="position: absolute; right:12px; top:12px; color:white;"><div style="background:#0af; border-radius:4px; padding:4px; margin-bottom:4px; color:white;"><p class="nopadding" style="font-size:12px;">promo</p></div></div>';
+    $promo = '<div style="position: absolute; right:12px; top:12px; color:white;"><div style="background:red; border-radius:4px; padding:4px; margin-bottom:4px; color:white;"><p class="nopadding" style="font-size:12px;">promo</p></div></div>';
   }
 echo '<div class="type hover" style="display:inline-block; vertical-align:middle; height:auto; background:#fff; border:solid 1px #ddd; position:relative;">'.$promo.'
 <div class="model" style="display:flex; height:68px;">
@@ -186,7 +186,7 @@ echo '<div class="type hover" style="display:inline-block; vertical-align:middle
 }
 else{
   if($f->hargapromo != 0){
-    $promo = '<div style="position: absolute; right:12px; top:12px; color:white;"><div style="background:#0af; border-radius:4px; padding:4px; margin-bottom:4px; color:white;"><p class="nopadding" style="font-size:12px;">promo</p></div></div>';
+    $promo = '<div style="position: absolute; right:12px; top:12px; color:white;"><div style="background:red; border-radius:4px; padding:4px; margin-bottom:4px; color:white;"><p class="nopadding" style="font-size:12px;">promo</p></div></div>';
   }
 echo '<div class="type hover" style="display:inline-block; vertical-align:middle; height:auto; background:#fff; border:solid 1px #ddd; position:relative; cursor:pointer;"';?> onclick="loading(), window.location='<?= site_url($this->uri->segment(1).'/'.$this->uri->segment(2).'/'.$f->link); ?>'">
 <?php echo $promo;

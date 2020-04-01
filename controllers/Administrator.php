@@ -198,7 +198,7 @@ class Administrator extends CI_Controller {
 				'id_kupon' => $this->input->post('id_kupon', TRUE),
 				'terakhir_update' => date("Y-m-d h:i:s", time()),
 				'nama_kupon' => $this->input->post('nama_kupon', TRUE),
-				'deskripsi_kupon' => $this->input->post('nama_kupon', TRUE),
+				'deskripsi_kupon' => $this->input->post('deskripsi_kupon', TRUE),
 				'persen' => $this->input->post('persen', TRUE),
 				'potongan' => $potongan,
 				'stok_kupon' => $this->input->post('stok_kupon', TRUE),
@@ -240,7 +240,7 @@ class Administrator extends CI_Controller {
 	{
 		if (!$this->session->userdata('admin'))
 		{
-			redirect('admin_waterplus');
+			redirect('admin');
 		}
 	}
 }

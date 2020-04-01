@@ -293,7 +293,7 @@ class Transaksi extends CI_Controller {
 <body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
   <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
   <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
-        <h1 style="font-size: 24px;">your order has been process</h1>
+		<h1 style="font-size: 24px;">your order has been processed</h1>
     </div>
   <hr>
   <div class="content" style="padding: 12px;">
@@ -597,7 +597,7 @@ if ($err) {
 <body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
   <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
   <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
-        <h1 style="font-size: 24px;">your order has been submitted to the courier</h1>
+        <h1 style="font-size: 24px;">your order has been sent</h1>
     </div>
   <hr>
   <div class="content" style="padding: 12px;">
@@ -827,7 +827,7 @@ if ($err) {
 	{
 		if (!$this->session->userdata('admin'))
 		{
-			redirect('login');
+			redirect('admin');
 		}
 	}
 }

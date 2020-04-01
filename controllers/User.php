@@ -80,11 +80,42 @@ class User extends CI_Controller {
     $this->template->admin('admin/detail_user', $data);
   }
 
+  public function pesan()
+  {
+    $this->db->order_by('tgl','desc');
+    $data['data'] = $this->db->get('pesan');
+    $data['header'] = 'Pesan';
+
+    $this->template->admin('admin/pesan', $data);
+  }
+
+  public function detail_pesan()
+  {
+    if(empty($this->uri->segment(3)) || !is_numeric($this->uri->segment(3))){
+      redirect('user/pesan');
+    }
+    $id_pesan = $this->uri->segment(3);
+    $query = "select * from pesan where idpesan = '$id_pesan'";
+    $data['data'] = $this->db->query($query);
+    $data['header'] = 'Detail Pesan '.$id_pesan;
+
+    $this->template->admin('admin/detail_pesan', $data);
+  }
+
+  public function subscriber()
+  {
+    $this->db->order_by('tgl','desc');
+    $data['data'] = $this->db->get('subscriber');
+    $data['header'] = 'Data Langganan Newsletter';
+
+    $this->template->admin('admin/subscriber', $data);
+  }
+
 	function cek_login()
 	{
 		if (!$this->session->userdata('admin'))
 		{
-			redirect('login');
+			redirect('admin');
 		}
 	}
 }
