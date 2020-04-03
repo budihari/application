@@ -88,7 +88,7 @@ class Payment extends CI_Controller {
                   $this->email->set_mailtype("html");
                   $this->email->from($profil->email_toko, $profil->title);
                   $this->email->to(
-                      array('admin@websederhana.com','m.ilham@waterplus.com','brian.chandra@waterplus.com')
+                      array('budihari47@gmail.com','henry.gunawan@waterplus.com','brian.chandra@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
                       );
                   $this->email->subject('Konfirmasi Pembayaran');
                   $this->email->message(

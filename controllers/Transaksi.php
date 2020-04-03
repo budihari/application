@@ -214,17 +214,28 @@ class Transaksi extends CI_Controller {
       if (!is_numeric($this->uri->segment(3)))
       {
          redirect('transaksi');
-      }
+	  }
+	  date_default_timezone_set("Asia/Bangkok");
+	  $today = date("Y-m-d H:i:s");
 	  $id_order = $this->uri->segment(3);
 	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
-      $tableorder = array (
-					'status_proses' => "on process"
-				);
-	  $this->trans->update('t_order', $tableorder, ['id_order' => $id_order]);
 	  $table = "t_order o
 				JOIN t_users usr ON (o.email = usr.email)
 				JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
-	  $order = $this->db->get_where($table, ['o.id_order' => $this->uri->segment(3)])->row();
+	  $order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
+	  $do = $order->detail;
+	  if(empty($do)){
+		$do = 'process by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  else{
+		$do = $do.', process by '.$this->session->userdata('user').' at '.$today;
+	  }
+      $tableorder = array (
+					'status_proses' => "on process",
+					'detail'		=> $do
+				);
+	  $this->trans->update('t_order', $tableorder, ['id_order' => $id_order]);
+	  $order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
 	  $subjek = 'your order has been process. ID order '.$id_order;
 	  $alamat = array();
 	  $alamat1 = array();
@@ -274,7 +285,10 @@ class Transaksi extends CI_Controller {
 
 	  $this->email->initialize($config);
 	  $this->email->from($profil->email_toko, $profil->title);
-	  $this->email->to($order->email);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		);
 	  $this->email->subject($subjek);
 	  $this->email->message(
 	  '
@@ -517,7 +531,9 @@ if ($err) {
       if (!is_numeric($this->uri->segment(3)))
       {
          redirect('transaksi');
-      }
+	  }
+	  date_default_timezone_set("Asia/Bangkok");
+	  $today = date("Y-m-d H:i:s");
       if ($this->input->post('form', TRUE) == 'Submit') {
          //validasi
       		$this->form_validation->set_rules('resi', 'Nomor Resi', 'required|min_length[4]');
@@ -525,9 +541,16 @@ if ($err) {
          if ($this->form_validation->run() == TRUE)
          {
 
-			$table = "t_order o
+	  $table = "t_order o
 				JOIN t_users usr ON (o.email = usr.email)";
 	  $order = $this->db->get_where($table, ['o.id_order' => $this->uri->segment(3)])->row();
+	  $do = $order->detail;
+	  if(empty($do)){
+		$do = 'delivery process by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  else{
+		$do = $do.', delivery process by '.$this->session->userdata('user').' at '.$today;
+	  }
 	  $subjek = 'your order with ID '.$id_order.' has been submitted to the courier';
 	  $alamat = array();
 	  $alamat1 = array();
@@ -557,7 +580,6 @@ if ($err) {
          }
 		 $alamat = join(", ", $alamat);
 		 $alamat1 = join(", ", $alamat1);
-
 		 $table = '';
 		 $table1 = "t_detail_order detail
 		 JOIN t_items i ON (detail.id_item = i.id_item)";
@@ -578,7 +600,10 @@ if ($err) {
 
 	  $this->email->initialize($config);
 	  $this->email->from($profil->email_toko, $profil->title);
-	  $this->email->to($order->email);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		);
 	  $this->email->subject($subjek);
 	  $this->email->message(
 	  '

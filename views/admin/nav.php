@@ -117,6 +117,9 @@ $profile = $profil->row();
                      </li>
                   </ul>
                </li>
+               <?php
+                  if($this->session->userdata('level_admin') == '11'){
+               ?>
                <li class="">
                   <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                      <i class="fa fa-envelope"></i> Pesan
@@ -145,6 +148,9 @@ $profile = $profil->row();
                      </li>
                   </ul> 
                </li>
+                     <?php
+                  }
+                     ?>
             </ul>
          </nav>
       </div>

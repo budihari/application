@@ -163,21 +163,38 @@ class Pembayaran extends CI_Controller {
       if (!is_numeric($this->uri->segment(3)))
       {
          echo '<script type="text/javascript">window.history.go(-1)</script>';
-      }
+	  }
+	  date_default_timezone_set("Asia/Bangkok");
+	  $today = date("Y-m-d H:i:s");
       $idpembayaran = $this->uri->segment(3);
-      $cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $idpembayaran)) -> row();
-	  $id_order = $cek -> id_order;
+	  $cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $idpembayaran)) -> row();
+	  $id_order = $cek->id_order;
+	  $cekorder = $this->bayar->get_where('t_order', array('id_order' => $id_order)) -> row();
+	  $detail = $cek->detail_pembayaran;
+	  $do = $cekorder->detail;
+	  if(empty($detail)){
+		$detail = 'valid by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  else{
+		$detail = $detail.', valid by '.$this->session->userdata('user').' at '.$today;
+	  }
 	  $spek = array (
-					'status' => "valid"
+					'status' => "valid",
+					'detail_pembayaran' => $detail
 				);
 	  $this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $idpembayaran]);
-      $table_order = array (
+	  if(empty($do)){
+		$do = 'paid by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  else{
+		$do = $do.', paid by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  $table_order = array (
       				'bukti' => $cek->bukti,
-					'status_proses' => "paid"
+					'status_proses' => "paid",
+					'detail' => $do
 				);
 	  $this->bayar->update('t_order', $table_order, ['id_order' => $id_order]);
-		date_default_timezone_set("Asia/Bangkok");
-		$today = date("Y-m-d H:i:s");
 		$tgl = date("ymd");
 		$profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
 		$table = "t_order o
@@ -204,7 +221,10 @@ class Pembayaran extends CI_Controller {
 
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		$this->email->to($order->email);
+		//$this->email->to($order->email);
+		$this->email->to(
+			array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+			);
 		$this->email->subject($subjek);
 		$this->email->message(
 		'
@@ -308,13 +328,22 @@ class Pembayaran extends CI_Controller {
 	{
 	   echo '<script type="text/javascript">window.history.go(-1)</script>';
 	}
+	date_default_timezone_set("Asia/Bangkok");
+	$today = date("Y-m-d H:i:s");
 	$idpembayaran = $this->uri->segment(3);
-	$spek = array (
-				  'status' => "not valid"
-			  );
+	$cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $idpembayaran)) -> row();
+	$detail = $cek->detail_pembayaran;
+	  if(empty($detail)){
+		$detail = 'valid by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  else{
+		$detail = $detail.', valid by '.$this->session->userdata('user').' at '.$today;
+	  }
+	  $spek = array (
+					'status' => "valid",
+					'detail_pembayaran' => $detail
+				);
 	$this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $idpembayaran]);
-	  date_default_timezone_set("Asia/Bangkok");
-	  $today = date("Y-m-d H:i:s");
 	  $tgl = date("ymd");
 	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
 	  $table = "t_order o
@@ -345,7 +374,10 @@ class Pembayaran extends CI_Controller {
 
 	  $this->email->initialize($config);
 	  $this->email->from($profil->email_toko, $profil->title);
-	  $this->email->to($order->email);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
+		);
 	  $this->email->subject($subjek);
 	  $this->email->message(
 	  '

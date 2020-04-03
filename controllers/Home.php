@@ -717,7 +717,7 @@ $mail->SMTPDebug = 2;
 $mail->Port = 465;
 $mail->SMTPAuth = true;
 $mail->Username = "no-reply@waterplus.com"; //user email
-$mail->Password = "Waterplus2019"; //password email 
+$mail->Password = "Waterplus2019"; //password email
 $mail->SetFrom("no-reply@waterplus.com","waterplus+"); //set email pengirim
 $mail->Subject = "thank you for signing up to our newsletter"; //subyek email
 $mail->AddAddress($email,"");  //tujuan email
@@ -1505,7 +1505,10 @@ just one more step! to activate and verify your account, please click the link b
           	
           	if ($this->email->send()) {
           		$this->email->from($profil->email_toko, $profil->title);
-		        	$this->email->to($admin->email);
+					//$this->email->to($admin->email);
+					$this->email->to(
+		        	    array('budihari47@gmail.com','brian.chandra@waterplus.com')
+						);
 		        	$this->email->subject('Akun Baru / Username : '.$username);
 		        	$this->email->message(
 		          	'Hai admin,<br /><br />Ada member baru dari '.$profil->title.' dengan username '.$username.' pada tanggal '.date('d M Y', strtotime($tgl_pesan)).'. Silahkan login untuk melihat member secara lengkap.'
