@@ -69,11 +69,21 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 					if ($this->app->insert('alamat', $data))
 					{
 						$this->session->set_flashdata('success', 'shipping option has been added');
-						redirect ('checkout');
+						//redirect ('checkout');
+						echo '
+						<script>
+							window.history.go(-1)
+						</script>
+						';
 
 					} else {
 						$this->session->set_flashdata('alert', 'shipping option not added');
-						redirect ('checkout');
+						//redirect ('checkout');
+						echo '
+						<script>
+							window.history.go(-1)
+						</script>
+						';
 					}
 
 			}
@@ -98,7 +108,12 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				);
 				$this->app->update('alamat', $data, array('iduser' => $this->session->userdata('user_id'), 'idalamat' => $this->input->post('change', TRUE)));
 				$this->session->set_flashdata('success', 'address changed successfully');
-				redirect ('checkout');
+				//redirect ('checkout');
+				echo '
+						<script>
+							window.history.go(-1)
+						</script>
+						';
 			}
 		}
 	}
@@ -118,11 +133,21 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 			if ($this->app->update('alamat', $data, $cond))
 					{
 						$this->session->set_flashdata('success', 'shipping option has been update');
-						redirect ('checkout');
+						//redirect ('checkout');
+						echo '
+						<script>
+							window.history.go(-1)
+						</script>
+						';
 
 					} else {
 						$this->session->set_flashdata('alert', 'failed to update');
-						redirect ('checkout');
+						//redirect ('checkout');
+						echo '
+						<script>
+							window.history.go(-1)
+						</script>
+						';
 					}
     	}// end if post change
 	}

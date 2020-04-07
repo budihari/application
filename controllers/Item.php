@@ -64,6 +64,50 @@ class Item extends CI_Controller {
    	echo json_encode($output);
    }
 
+   	public function multiupdate()
+   	{
+		$this->cek_login();
+		$this->template->admin('admin/multiupdate');
+	}
+
+	public function download_format()
+	{
+	$this->cek_login();
+	$connect = mysqli_connect("localhost","root","","new");
+	header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=data item.csv');
+      $output = fopen("php://output", "w");
+
+      fputcsv($output, array('ID Item', 'Link', 'Nama Item', 'harga', 'harga promo', 'berat (gram)', 'stok', 'aktif', 'deskripsi', 'model', 'tipe'));
+
+      $query = "SELECT * from t_items";
+
+      $result = mysqli_query($connect, $query);
+
+      while($d = mysqli_fetch_array($result))
+
+      {
+		  $item = array(
+			$d['id_item'],
+			$d['link'],
+			$d['nama_item'],
+			$d['harga'],
+			$d['hargapromo'],
+			$d['berat'],
+			$d['stok'],
+			$d['aktif'],
+			$d['deskripsi'],
+			$d['model'],
+			$d['tipe']
+		  );
+
+           fputcsv($output, $item);
+
+      }
+
+	  fclose($output);
+	}
+
 
    public function add_item()
    {

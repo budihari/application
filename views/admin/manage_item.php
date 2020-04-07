@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    <div class="x_title">
       <h2>Managemen Item</h2>
       <div style="float:right">
+         <a href="<?= base_url('item/multiupdate'); ?>" class="btn btn-primary">Update Sekaligus</a>
          <a href="<?= base_url('item/add_item'); ?>" class="btn btn-primary">Tambah Item</a>
       </div>
      <div class="clearfix"></div>
