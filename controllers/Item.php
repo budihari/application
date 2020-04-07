@@ -66,8 +66,86 @@ class Item extends CI_Controller {
 
    	public function multiupdate()
    	{
-		$this->cek_login();
-		$this->template->admin('admin/multiupdate');
+$this->cek_login();
+$message = '';
+if($this->input->post('upload', TRUE))
+{
+$connect = mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $this->db->database);
+ if($_FILES['product_file']['name'])
+ {
+  $filename = explode(".", $_FILES['product_file']['name']);
+  if(end($filename) == "csv")
+  {
+   $handle = fopen($_FILES['product_file']['tmp_name'], "r");
+   $berhasil = 0;
+   while($data = fgetcsv($handle))
+   {
+    $id = mysqli_real_escape_string($connect, $data[0]);
+    $link = mysqli_real_escape_string($connect, $data[1]);  
+    $nama = mysqli_real_escape_string($connect, $data[2]);
+    $harga = mysqli_real_escape_string($connect, $data[3]);
+    $harga_promo = mysqli_real_escape_string($connect, $data[4]);
+    $berat = mysqli_real_escape_string($connect, $data[5]);
+    $stok = mysqli_real_escape_string($connect, $data[6]);
+    $aktif = mysqli_real_escape_string($connect, $data[7]);
+    $deskripsi = mysqli_real_escape_string($connect, $data[8]);
+    $model = mysqli_real_escape_string($connect, $data[9]);
+    $tipe = mysqli_real_escape_string($connect, $data[10]);
+    $query = "
+     UPDATE t_items 
+     SET link = '$link', 
+     nama_item = '$nama', 
+     harga = '$harga', 
+     hargapromo = '$harga_promo', 
+     berat = '$berat', 
+     stok = '$stok', 
+     aktif = '$aktif', 
+     deskripsi = '$deskripsi', 
+     model = '$model', 
+     tipe = '$tipe' 
+     WHERE id_item = '$id'
+    ";
+	//echo "$id, $link, $nama, $harga, $harga_promo, $berat, $stok, $aktif, $deskripsi, $model, $tipe <br>";
+    if(mysqli_query($connect, $query)){
+		$berhasil++;
+    }
+    //else{
+    //    echo "Gagal<br>";
+    //}
+   }
+   $message = '<label class="text-success">'.$berhasil.' data berhasil diupdate</label>';
+   $this->session->set_flashdata('success', $berhasil.' data berhasil diupdate');
+   echo "
+		   <script>
+   				window.history.go(-1);
+		   </script>
+   ";
+   //header("location: index.php?updation=1");
+  }
+  else
+  {
+   $message = '<label class="text-danger">Hanya boleh file .csv</label>';
+   $this->session->set_flashdata('alert', 'Hanya boleh file .csv');
+   echo "
+		   <script>
+   				window.history.go(-1);
+		   </script>
+   ";
+  }
+ }
+ else
+ {
+  $message = '<label class="text-danger">Pilih file terlebih dahulu</label>';
+  $this->session->set_flashdata('alert', 'Silahkan pilih file terlebih dahulu');
+  echo "
+		   <script>
+   				window.history.go(-1);
+		   </script>
+   ";
+ }
+}
+$data['message'] = $message;
+		$this->template->admin('admin/multiupdate', $data);
 	}
 
 	public function download_format()
@@ -1044,6 +1122,7 @@ class Item extends CI_Controller {
 			$data['nama'] 	    = $key->nama_item;
 			$data['berat'] 	    = $key->berat;
 			$data['harga'] 	    = $key->harga;
+			$data['hargapromo']	= $key->hargapromo;
 			$data['status']     = $key->aktif;
 			$data['brand'] 	    = $key->brand;
 			$data['katakunci'] 	= $key->katakunci;

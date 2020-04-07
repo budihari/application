@@ -146,6 +146,14 @@ function tab(data1, data2) {
          </div>
 
          <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12">Harga Promo
+            </label>
+            <div class="col-md-4 col-sm-6">
+               <input id="hargapromo" class="form-control col-md-7 col-xs-12" type="text" name="hargapromo" value="<?= number_format($hargapromo, 0, '.', ','); ?>">
+            </div>
+         </div>
+
+         <div class="form-group">
             <label class="control-label col-md-2 col-sm-2 col-xs-12">Stok Item*
             </label>
             <div class="col-md-4 col-sm-6">
@@ -857,3 +865,41 @@ function tab(data1, data2) {
         </div>
    </form>
 </div>
+<script>
+$(document).ready(function() {
+document.getElementById("amount").onkeyup = function() {myFunction("#amount")};
+document.getElementById("hargapromo").onkeyup = function() {myFunction("#hargapromo")};
+function myFunction(data){
+   var $form = $( "#postForm" );
+        var $input = $form.find(data);
+    
+        $input.on( "keyup", function( event ) {
+            
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
+            }
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
+            }
+            
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+                    input = input ? parseInt( input, 10 ) : 0;
+    
+                    $this.val( function() {
+                        return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+                    } );
+        } );
+}
+});
+</script>
