@@ -151,7 +151,7 @@ $data['message'] = $message;
 	public function download_format()
 	{
 	$this->cek_login();
-	$connect = mysqli_connect("localhost","root","","new");
+	$connect = mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $this->db->database);
 	header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=data item.csv');
       $output = fopen("php://output", "w");

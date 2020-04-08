@@ -476,13 +476,13 @@ curl_close($curl);
 if ($err) {
   echo "cURL Error #:" . $err;
 } else {
-	$result = json_decode($response, TRUE)['rajaongkir']['result']['manifest'];
+	$result = json_decode($response, TRUE)['rajaongkir']['result'];
 	//print_r($result);
 	$html = "";
 	$arr = array();
 	if(!empty($result)){
-	for ($i=0; $i < count($result); $i++) {
-		$a = $result[$i]['manifest_date'].' '.$result[$i]['manifest_time'].'_'.$result[$i]['manifest_description'];
+	for ($i=0; $i < count($result['manifest']); $i++) {
+		$a = $result['manifest'][$i]['manifest_date'].' '.$result['manifest'][$i]['manifest_time'].'_'.$result['manifest'][$i]['manifest_description'];
 		array_push($arr, $a);
 	}
 

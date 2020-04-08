@@ -24,7 +24,10 @@ echo '<div style="position:fixed; z-index:9; top:54px; left:0; right:0;">';
    </div>
 
     <div style="padding: 0px 5px;">
-        <p>Untuk mengupdate item, silahkan download terlebih dahulu format csv dibawah kemudian upload kembali dihalaman ini</p>
+        <p>Langkah:<br>
+        1. Download file .csv dibawah ini ( jika belum ada )<br>
+        2. Ubah data di dalam file .csv yg telah di download<br>
+        3. Upload kembali file .csv yg telah diubah</p>
         <div style="display:flex;">
             <div style="width:30%;">
               <a class="btn btn-primary" href="<?= base_url();?>item/download_format">Download Format</a>

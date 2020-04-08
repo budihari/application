@@ -28,18 +28,21 @@ class Pembayaran extends CI_Controller {
 
 			$batas = $i->tgl_pembayaran;
 
-			if ($i->status == 'not valid') {
+			$btn = '';
+			$validation = '<a href="'.base_url().'pembayaran/detail/'.$i->idpembayaran.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>';
+
+			if ($i->status == 'not valid' && $this->session->userdata('level_admin') == '21') {
 
 				$btn = '<a href="'.site_url('pembayaran/delete/'.$i->idpembayaran).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin Ingin Menghapus Data ini ?\')"><i class="fa fa-trash"></i></a>';
 				$validation = '<a href="'.base_url().'pembayaran/valid/'.$i->idpembayaran.'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
 
-			} else if ($i->status == 'valid') {
+			} else if ($i->status == 'valid' && $this->session->userdata('level_admin') == '21') {
 
 				//$btn = '<a href="'.base_url().'pembayaran/notvalid/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
 				$btn = '<a href="'.base_url().'pembayaran/tolak/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
 				$validation = '<a href="'.base_url().'pembayaran/detail/'.$i->idpembayaran.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>';
 			}
-			else{
+			else if ($this->session->userdata('level_admin') == '21'){
 				//$btn = '<a href="'.base_url().'pembayaran/notvalid/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
 				$btn = '<a href="'.base_url().'pembayaran/tolak/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
 				$validation = '<a href="'.base_url().'pembayaran/valid/'.$i->idpembayaran.'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
@@ -219,6 +222,160 @@ class Pembayaran extends CI_Controller {
 		$config['smtp_pass'] = $profil->pass_toko; //isi dengan password
 		$ongkir = $order->ongkir;
 
+		$message_user = '
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+		<html>
+		<head>
+			<title>
+				Tes Email Pembayaran Telah Diterima
+			</title>
+			<style>
+			*{
+				font-family: arial;
+			}
+			</style>
+		</head>
+		<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+			<div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+			<div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+				
+				<h1 style="font-size: 24px;">payment received</h1>
+			</div>
+			<hr>
+			<div class="content" style="padding: 12px;">
+				<p style="margin: 0px;">thank you for completing the payment via bank transfer</p>
+			</div>
+			<table style="width: 100%;" cellpadding="12">
+				<tr>
+					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
+					<td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
+				</tr>
+				<tr>
+					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
+				</tr>
+				<tr>
+					<td><p><b>payment status</b><br>'.$order->status.'</p></td>
+				</tr>
+				<tr>
+					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
+				</tr>
+			</table>
+			<hr>
+			<div style="padding: 12px;">
+				<h2 style="margin: 0px; font-size: 24px;">payment</h2>
+			</div>
+			<hr>
+			<div style="padding: 0px 4px;">
+				<table cellpadding="8" style="width:100%;">
+				'.$table.'
+					<tr>
+					<td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+					</tr>
+					<tr>
+					<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+					</tr>
+					<tr>
+					<td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+					</tr>
+				<tr>
+					<td colspan="3"><hr style="margin:0px;"></td>
+				</tr>
+			
+					<tr>
+					<td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+					</tr>
+				</table>
+				<br>
+				<div style="text-align: center; padding: 12px; border-radius: 8px; background: #ffa; font-size: 14px;">
+					<p>please ensure that you do not give any proof of payment and/or payment details to any party apart from waterplus+</p>
+				</div>
+				<hr>
+			</div>
+				<div style="padding: 0px 12px;">
+					<p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+				</div>
+				<hr>
+				<div>
+					<p>&copy; copyright 2020</p>
+				</div>
+			</div>
+		</body>
+		</html>';
+
+		$message_admin = '
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+		<html>
+		<head>
+			<title>
+				Tes Email Pembayaran Telah Diterima
+			</title>
+			<style>
+			*{
+				font-family: arial;
+			}
+			</style>
+		</head>
+		<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+			<div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+			<div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+				
+				<h1 style="font-size: 24px;">payment received</h1>
+			</div>
+			<hr>
+			<div class="content" style="padding: 12px;">
+				<p style="margin: 0px;">payment for transaction ID '.$order->id_order.' is valid.</p>
+			</div>
+			<table style="width: 100%;" cellpadding="12">
+				<tr>
+					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
+					<td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
+				</tr>
+				<tr>
+					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
+				</tr>
+				<tr>
+					<td><p><b>payment status</b><br>'.$order->status.'</p></td>
+				</tr>
+			</table>
+			<hr>
+			<div style="padding: 12px;">
+				<h2 style="margin: 0px; font-size: 24px;">payment</h2>
+			</div>
+			<hr>
+			<div style="padding: 0px 4px;">
+				<table cellpadding="8" style="width:100%;">
+				'.$table.'
+					<tr>
+					<td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+					</tr>
+					<tr>
+					<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+					</tr>
+					<tr>
+					<td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+					</tr>
+				<tr>
+					<td colspan="3"><hr style="margin:0px;"></td>
+				</tr>
+			
+					<tr>
+					<td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+					</tr>
+				</table>
+				<hr>
+			</div>
+				<div style="padding: 0px 12px;">
+					<p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+				</div>
+				<hr>
+				<div>
+					<p>&copy; copyright 2020</p>
+				</div>
+			</div>
+		</body>
+		</html>';
+
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
 		//$this->email->to($order->email);
@@ -226,88 +383,7 @@ class Pembayaran extends CI_Controller {
 			array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
 			);
 		$this->email->subject($subjek);
-		$this->email->message(
-		'
-		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-<head>
-    <title>
-        Tes Email Pembayaran Telah Diterima
-    </title>
-    <style>
-    *{
-        font-family: arial;
-    }
-    </style>
-</head>    
-<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
-    <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
-    <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
-        
-        <h1 style="font-size: 24px;">payment received</h1>
-    </div>
-    <hr>
-    <div class="content" style="padding: 12px;">
-        <p style="margin: 0px;">thank you for completing the payment via bank transfer</p>
-    </div>
-    <table style="width: 100%;" cellpadding="12">
-        <tr>
-            <td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
-            <td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
-        </tr>
-        <tr>
-            <td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
-        </tr>
-        <tr>
-            <td><p><b>payment status</b><br>'.$order->status.'</p></td>
-        </tr>
-        <tr>
-            <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
-            <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
-        </tr>
-    </table>
-    <hr>
-    <div style="padding: 12px;">
-        <h2 style="margin: 0px; font-size: 24px;">payment</h2>
-    </div>
-    <hr>
-    <div style="padding: 0px 4px;">
-		<table cellpadding="8" style="width:100%;">
-		'.$table.'
-            <tr>
-            <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
-			</tr>
-			<tr>
-			<td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
-			</tr>
-            <tr>
-            <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
-            </tr>
-        <tr>
-            <td colspan="3"><hr style="margin:0px;"></td>
-        </tr>
-    
-            <tr>
-            <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
-            </tr>
-        </table>
-        <br>
-        <div style="text-align: center; padding: 12px; border-radius: 8px; background: #ffa; font-size: 14px;">
-            <p>please ensure that you do not give any proof of payment and/or payment details to any party apart from waterplus+</p>
-        </div>
-        <hr>
-    </div>
-        <div style="padding: 0px 12px;">
-            <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
-        </div>
-        <hr>
-        <div>
-            <p>&copy; copyright 2020</p>
-        </div>
-    </div>
-</body>
-</html>'
-		);
+		$this->email->message($message_admin);
 		if ($this->email->send())
 		{
 			redirect('transaksi');

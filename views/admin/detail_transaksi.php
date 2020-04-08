@@ -170,7 +170,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </table>
             <a href="#" class="btn btn-default" onclick="window.history.go(-1)">Kembali</a>
             <?php
-            if ($user->status_proses == 'not paid') {
+            if ($user->status_proses == 'not paid' && $this->session->userdata('level_admin') == '21') {
 
                $btn = '<a href="'.base_url('pembayaran/add_pembayaran/'.$user->id_order).'" class="btn btn-default">Tambah Pembayaran</a>';
    
