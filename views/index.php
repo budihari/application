@@ -254,6 +254,8 @@ placeholder: "please select"
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<?php
+/*
 <!-- Google Analytics -->
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-148465774-1"></script>
@@ -266,6 +268,8 @@ placeholder: "please select"
 </script>
 <script type="text/javascript" src="https://www.waterplus.com/js/analytics.js"></script>
 <!-- End Google Analytics -->
+*/
+?>
 </head>
 <body onbeforeunload="loading()">
 <!--<div style="position: fixed; bottom:0px; z-index:9; width:100%; height:100px; background:#333; color:#fff;">
@@ -431,7 +435,7 @@ else{
       <h3>quicklinks</h3>
       <p style="padding: 0px 12px;"><a style="font-size: 14px;" href="<?php echo base_url('terms-and-conditions');?>">terms &amp; conditions</a><br>
       <a style="font-size: 14px;" href="<?php echo base_url('privacy-policy');?>">privacy policy</a><br>
-      <a style="font-size: 14px;" href="#">faq</a></p>
+      <a style="font-size: 14px;" href="<?php echo base_url('faq');?>">faq</a></p>
    </div>
    <div class="reach vpadding">
       <h3>reach us at</h3>

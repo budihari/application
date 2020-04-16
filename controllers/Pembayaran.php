@@ -263,7 +263,7 @@ class Pembayaran extends CI_Controller {
 			</table>
 			<hr>
 			<div style="padding: 12px;">
-				<h2 style="margin: 0px; font-size: 24px;">payment</h2>
+				<h2 style="margin: 0px; font-size: 24px;">your order</h2>
 			</div>
 			<hr>
 			<div style="padding: 0px 4px;">
@@ -324,7 +324,7 @@ class Pembayaran extends CI_Controller {
 			</div>
 			<hr>
 			<div class="content" style="padding: 12px;">
-				<p style="margin: 0px;">payment for transaction ID '.$order->id_order.' is valid.</p>
+				<p style="margin: 0px;">customer payment for transaction ID '.$order->id_order.' is valid.</p>
 			</div>
 			<table style="width: 100%;" cellpadding="12">
 				<tr>
@@ -340,7 +340,7 @@ class Pembayaran extends CI_Controller {
 			</table>
 			<hr>
 			<div style="padding: 12px;">
-				<h2 style="margin: 0px; font-size: 24px;">payment</h2>
+				<h2 style="margin: 0px; font-size: 24px;">customer order</h2>
 			</div>
 			<hr>
 			<div style="padding: 0px 4px;">
@@ -380,13 +380,24 @@ class Pembayaran extends CI_Controller {
 		$this->email->from($profil->email_toko, $profil->title);
 		//$this->email->to($order->email);
 		$this->email->to(
-			array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+			array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
 			);
 		$this->email->subject($subjek);
 		$this->email->message($message_admin);
 		if ($this->email->send())
 		{
+			$this->email->initialize($config);
+			$this->email->from($profil->email_toko, $profil->title);
+			//$this->email->to($order->email);
+			$this->email->to(
+			array($order->email)
+			);
+			$this->email->subject($subjek);
+			$this->email->message($message_user);
+			if ($this->email->send())
+			{
 			redirect('transaksi');
+			}
 		}
 		else{
 			echo '<script type="text/javascript">
@@ -410,13 +421,13 @@ class Pembayaran extends CI_Controller {
 	$cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $idpembayaran)) -> row();
 	$detail = $cek->detail_pembayaran;
 	  if(empty($detail)){
-		$detail = 'valid by '.$this->session->userdata('user').' at '.$today;
+		$detail = 'invalid by '.$this->session->userdata('user').' at '.$today;
 	  }
 	  else{
-		$detail = $detail.', valid by '.$this->session->userdata('user').' at '.$today;
+		$detail = $detail.', invalid by '.$this->session->userdata('user').' at '.$today;
 	  }
 	  $spek = array (
-					'status' => "valid",
+					'status' => "not valid",
 					'detail_pembayaran' => $detail
 				);
 	$this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $idpembayaran]);
@@ -448,15 +459,7 @@ class Pembayaran extends CI_Controller {
 	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
 	  $ongkir = $order->ongkir;
 
-	  $this->email->initialize($config);
-	  $this->email->from($profil->email_toko, $profil->title);
-	  //$this->email->to($order->email);
-	  $this->email->to(
-		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
-		);
-	  $this->email->subject($subjek);
-	  $this->email->message(
-	  '
+	  $message_user = '
 	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -497,7 +500,7 @@ class Pembayaran extends CI_Controller {
   </table>
   <hr>
   <div style="padding: 12px;">
-	  <h2 style="margin: 0px; font-size: 24px;">payment</h2>
+	  <h2 style="margin: 0px; font-size: 24px;">your order</h2>
   </div>
   <hr>
   <div style="padding: 0px 4px;">
@@ -535,11 +538,107 @@ class Pembayaran extends CI_Controller {
 	  </div>
   </div>
 </body>
-</html>'
+</html>';
+
+$message_admin = '
+	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>
+	  Tes Email Pembayaran Ditolak
+  </title>
+  <style>
+  *{
+	  font-family: arial;
+  }
+  </style>
+</head>    
+<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+  <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+  <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+
+	  <h1 style="font-size: 24px;">invalid payment</h1>
+  </div>
+  <hr>
+  <div class="content" style="padding: 12px;">
+	  <p style="margin: 0px;">sorry, we declined your payment confirmation. with the following reasons "'.$order->alasan.'". if you have a problem with your payment, please contact us.</p>
+  </div>
+  <table style="width: 100%;" cellpadding="12">
+	  <tr>
+		  <td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
+		  <td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
+	  </tr>
+	  <tr>
+		  <td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
+	  </tr>
+	  <tr>
+		  <td><p><b>payment status</b><br>'.$status.'</p></td>
+	  </tr>
+  </table>
+  <hr>
+  <div style="padding: 12px;">
+	  <h2 style="margin: 0px; font-size: 24px;">customer order</h2>
+  </div>
+  <hr>
+  <div style="padding: 0px 4px;">
+	  <table cellpadding="8" style="width:100%;">
+	  '.$table.'
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+		  <td colspan="3"><hr style="margin:0px;"></td>
+	  </tr>
+  
+		  <tr>
+		  <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+		  </tr>
+	  </table>
+	  <hr>
+  </div>
+	  <div style="padding: 0px 12px;">
+		  <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+	  </div>
+	  <hr>
+	  <div>
+		  <p>&copy; copyright 2020</p>
+	  </div>
+  </div>
+</body>
+</html>';
+
+	  $this->email->initialize($config);
+	  $this->email->from($profil->email_toko, $profil->title);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email)
+		);
+	  $this->email->subject($subjek);
+	  $this->email->message(
+	  $message_user
 	  );
 	  if ($this->email->send())
 	  {
+		$this->email->initialize($config);
+		$this->email->from($profil->email_toko, $profil->title);
+		//$this->email->to($order->email);
+		$this->email->to(
+		  array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
+		  );
+		$this->email->subject($subjek);
+		$this->email->message(
+		$message_admin
+		);
+		if ($this->email->send())
+	  	{
 		  redirect('pembayaran');
+		}
 	  }
 	  else{
 		  echo '<script type="text/javascript">

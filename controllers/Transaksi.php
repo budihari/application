@@ -283,15 +283,7 @@ class Transaksi extends CI_Controller {
 	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
 	  $ongkir = $order->ongkir;
 
-	  $this->email->initialize($config);
-	  $this->email->from($profil->email_toko, $profil->title);
-	  //$this->email->to($order->email);
-	  $this->email->to(
-		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-		);
-	  $this->email->subject($subjek);
-	  $this->email->message(
-	  '
+	  $message_user = '
 	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -373,11 +365,109 @@ class Transaksi extends CI_Controller {
 	  </div>
   </div>
 </body>
-</html>'
+</html>';
+
+$message_admin = '
+	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>
+	  Pesanan diproses
+  </title>
+  <style>
+  *{
+	  font-family: arial;
+  }
+  </style>
+</head>    
+<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+  <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+  <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+		<h1 style="font-size: 24px;">customer order has been processed</h1>
+    </div>
+  <hr>
+  <div class="content" style="padding: 12px;">
+        <p>hi admin</p>
+        <p style="margin: 0px;">customer order with ID '.$order->id_order.' has been process.</p>
+  </div>
+  <table style="width: 100%;" cellpadding="12">
+        <tr>
+            <td style="width: 50%;"><p><b>ID order</b><br>'.$order->id_order.'</p></td>
+            <td style="width: 50%;"><p><b>order date</b><br>'.date('d M Y', strtotime($order->tgl_pesan)).'</p></td>
+        </tr>
+        <tr>
+            <td valign="top"><p><b>address</b><br>
+                <span style="font-size: 14px; line-height: 20px;">'.$order->nama_pemesan.'<br>'.$alamat.'<br>'.$alamat1.'<br>phone: '.$order->telepon.'</span>
+            </p></td>
+            <td valign="top">
+                <p><b>status</b><br>'.$order->status_proses.'</p>
+            </td>
+        </tr>
+    </table>
+  <hr>
+  <div style="padding: 12px;">
+	  <h2 style="margin: 0px; font-size: 24px;">customer order</h2>
+  </div>
+  <hr>
+  <div style="padding: 0px 4px;">
+	  <table cellpadding="8" style="width:100%;">
+	  '.$table.'
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+		  <td colspan="3"><hr style="margin:0px;"></td>
+	  </tr>
+  
+		  <tr>
+		  <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+		  </tr>
+	  </table>
+	  <hr>
+  </div>
+	  <div style="padding: 0px 12px;">
+		  <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+	  </div>
+	  <hr>
+	  <div>
+		  <p>&copy; copyright 2020</p>
+	  </div>
+  </div>
+</body>
+</html>';
+
+	  $this->email->initialize($config);
+	  $this->email->from($profil->email_toko, $profil->title);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email)
+		);
+	  $this->email->subject($subjek);
+	  $this->email->message(
+	  $message_user
 	  );
 	  if ($this->email->send())
 	  {
-		echo '<script type="text/javascript">window.history.go(-1)</script>';
+		$this->email->initialize($config);
+		$this->email->from($profil->email_toko, $profil->title);
+		//$this->email->to($order->email);
+		$this->email->to(
+		  array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		  );
+		$this->email->subject($subjek);
+		$this->email->message(
+		$message_admin
+		);
+		if ($this->email->send())
+	  	{
+			echo '<script type="text/javascript">window.history.go(-1)</script>';
+	  	}
 	  }
 	  else{
 		  echo '<script type="text/javascript">
@@ -598,15 +688,7 @@ if ($err) {
 	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
 	  $ongkir = $order->ongkir;
 
-	  $this->email->initialize($config);
-	  $this->email->from($profil->email_toko, $profil->title);
-	  //$this->email->to($order->email);
-	  $this->email->to(
-		array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-		);
-	  $this->email->subject($subjek);
-	  $this->email->message(
-	  '
+	  $message_user = '
 	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
@@ -697,7 +779,103 @@ if ($err) {
 	  </div>
   </div>
 </body>
-</html>'
+</html>';
+
+$message_admin = '
+	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>
+	  Pesanan dikirim
+  </title>
+  <style>
+  *{
+	  font-family: arial;
+  }
+  </style>
+</head>    
+<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+  <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+  <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+        <h1 style="font-size: 24px;">customer order has been sent</h1>
+    </div>
+  <hr>
+  <div class="content" style="padding: 12px;">
+        <p>hi admin</p>
+        <p style="margin: 0px;">customer order with ID '.$order->id_order.' has been submitted to the courier.</p>
+  </div>
+  <table style="width: 100%;" cellpadding="12">
+        <tr>
+            <td style="width: 50%;"><p><b>ID order</b><br>'.$order->id_order.'</p></td>
+            <td style="width: 50%;"><p><b>order date</b><br>'.date('d M Y', strtotime($order->tgl_pesan)).'</p></td>
+		</tr>
+		
+		<tr>
+		<td valign="top"><p><b>courier information</b><br>
+			<span style="font-size: 14px; line-height: 20px;">'.$order->kurir.'<br>('.$order->service.')
+		</p></td>
+		<td valign="top">
+			<p><b>tracking number</b><br>'.$this->input->post('resi').'</p>
+		</td>
+		</tr>
+
+        <tr>
+            <td valign="top"><p><b>address</b><br>
+                <span style="font-size: 14px; line-height: 20px;">'.$order->nama_pemesan.'<br>'.$alamat.'<br>'.$alamat1.'<br>phone: '.$order->telepon.'</span>
+            </p></td>
+            <td valign="top">
+                <p><b>status</b><br>delivery process</p>
+            </td>
+        </tr>
+        <tr>
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
+	  </tr>
+    </table>
+  <hr>
+  <div style="padding: 12px;">
+	  <h2 style="margin: 0px; font-size: 24px;">customer order</h2>
+  </div>
+  <hr>
+  <div style="padding: 0px 4px;">
+	  <table cellpadding="8" style="width:100%;">
+	  '.$table.'
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+		  <td colspan="3"><hr style="margin:0px;"></td>
+	  </tr>
+		  <tr>
+		  <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+		  </tr>
+	  </table>
+	  <hr>
+  </div>
+	  <div style="padding: 0px 12px;">
+		  <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+	  </div>
+	  <hr>
+	  <div>
+		  <p>&copy; copyright 2020</p>
+	  </div>
+  </div>
+</body>
+</html>';
+
+	  $this->email->initialize($config);
+	  $this->email->from($profil->email_toko, $profil->title);
+	  $this->email->to($order->email);
+	  $this->email->subject($subjek);
+	  $this->email->message(
+	  $message_user
 	  );
 	  if ($this->email->send())
 	  {
@@ -706,6 +884,16 @@ if ($err) {
 		  	'status_proses' => "delivery process"
 	  		);
 			$this->trans->update('t_order', $order, ['id_order' => $id_order]);
+			$this->email->initialize($config);
+			$this->email->from($profil->email_toko, $profil->title);
+			//$this->email->to($order->email);
+			$this->email->to(
+				array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+				);
+			$this->email->subject($subjek);
+			$this->email->message(
+			$message_admin
+			);
 			redirect('transaksi');
 	  }
 	  else{

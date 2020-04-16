@@ -106,6 +106,7 @@ $route['home/(:any)/(:any)'] = 'home/$1/';
 $route['home/kategori/(:any)'] = 'home/kategori/';
 $route['terms-and-conditions'] = 'home/terms_and_condition';
 $route['privacy-policy'] = 'home/privacy_policy';
+$route['faq'] = 'home/faq';
 $route['filter_by/(:any)/(:any)/(:any)'] = 'home/filter_by/';
 $route['(:any)'] = 'kategori/index/$1';
 $route['(:any)/(:any)'] = 'kategori/index/$1/$2';

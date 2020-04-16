@@ -603,6 +603,7 @@ $data['message'] = $message;
 		$data['link'] 			 = $this->input->post('link', TRUE);
 		$data['berat'] 			 = $this->input->post('berat', TRUE);
 		$data['harga'] 			 = $this->input->post('harga', TRUE);
+		$data['hargapromo'] 	 = $this->input->post('hargapromo', TRUE);
 		$data['status'] 		 = $this->input->post('status', TRUE);
 		$data['desk'] 			 = $this->input->post('desk', TRUE);
 		$data['stok'] 			 = $this->input->post('stok', TRUE);

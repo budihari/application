@@ -86,7 +86,12 @@ $ind = '
 <ol type="1" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
 <li>
     <h2 style="font-size: 20px; padding:12px 6px;">Pendahuluan</h2>
-    <p></p>
+	<p>
+	Kami menjaga privasi pelanggan dengan serius dan kami hanya akan mengumpulkan dan menggunakan informasi pribadi Anda seperti uraian di bawah ini.<br>
+Perlindungan data adalah hal yang menyangkut kepercayaan dan privasi Anda sangatlah penting bagi kami. Oleh karena itu, kami hanya akan menggunakan nama anda dan informasi lain yang berhubungan dengan Anda sesuai dengan kebijakan privasi ini. Kami hanya akan mengumpulkan informasi yang penting bagi kami dan kami hanya akan mengumpulkan informasi yang dibutuhkan untuk melakukan urusan dengan Anda.<br>
+Kami hanya akan menyimpan informasi Anda selama dibutuhkan oleh kami atau selama informasi tersebut berhubungan dengan tujuan-tujuan yang ada saat informasi dikumpulkan.
+Anda dapat mengunjungi website ini dan melihat-lihat tanpa harus meninggalkan informasi pribadi. Saat Anda mengunjungi website ini, Anda memiliki status anonim yang tidak akan bisa kami bisa identiifikasi kecuali Anda login menggunakan user name dan password Anda.
+	</p>
 </li>
 
 <li>
@@ -269,7 +274,11 @@ $eng = '
 <ol type="1" style="padding:0px 12px; padding-inline-start:26px; margin-top:0px;">
 <li>
     <h2 style="font-size: 20px; padding:12px 6px;">introduction</h2>
-    <p></p>
+	<p>
+	We take customer privacy seriously and we will only collect and use your personal information as described below.<br>
+	data protection is a matter that concerns your trust and privacy is very important to us. therefore, we will only use your name and other information related to you in accordance with this privacy policy. we will only collect information that is important to us and we will only collect information needed to do business with you.<br>
+	we will only retain your information as long as it is needed by us or as long as the information relates to the purposes that were in place when the information was collected. You can visit this website and look around without having to leave personal information. when you visit this website, you have an anonymous status that we will not be able to identify unless you log in using your user name and password.
+	</p>
 </li>
 
 <li>
@@ -923,6 +932,13 @@ if($this->input->post('email', TRUE) && !empty($this->input->post('email', TRUE)
 }
 	}
 
+	public function faq()
+	{
+		$data['title'] 		= "faq";
+      	$data['metadeskripsi'] = "frequently asked question";
+		$this->template->olshop('faq', $data);
+	}
+
 	public function price()
 	{
 
@@ -1432,8 +1448,8 @@ if($this->input->post('email', TRUE) && !empty($this->input->post('email', TRUE)
 				//proses
 				$this->load->library('email');
 
-				$config['smtp_user'] = 'no-reply@waterplus.com'; //isi dengan email gmail
-				$config['smtp_pass'] = 'Waterplus2019'; //isi dengan password
+				$config['smtp_user'] = $profil->email_toko; //isi dengan email gmail
+				$config['smtp_pass'] = $profil->pass_toko; //isi dengan password
 				
 				$this->email->initialize($config);
 				date_default_timezone_set("Asia/Bangkok");
@@ -1567,6 +1583,7 @@ public function resend()
 {
 if ($this->input->post('submit', TRUE) == 'resend')
 {
+$da = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
 $email = $this->input->post('email', TRUE);
 $query = $this->db->query("SELECT * from t_users WHERE email = '$email'");
 if ($query->num_rows() == 1) {
@@ -1595,8 +1612,9 @@ $mail->Host = "mail.waterplus.com"; //host masing2 provider email
 $mail->SMTPDebug = 2;
 $mail->Port = 465;
 $mail->SMTPAuth = true;
-$mail->Username = "no-reply@waterplus.com"; //user email
-$mail->Password = "Waterplus2019"; //password email
+
+$mail->Username = $da->email_toko; //user email
+$mail->Password = $da->pass_toko; //password email
 $mail->SetFrom("no-reply@waterplus.com","waterplus+"); //set email pengirim
 $mail->Subject = "waterplus+ - verify your email"; //subjek email
 $mail->AddAddress($email,"");  //tujuan email
@@ -1622,9 +1640,10 @@ just one more step! to activate and verify your account, please click the link b
 		  </body>
 		  </html>
 ';
+$mail->MsgHTML($message);
 if($mail->Send()){
     $this->session->set_flashdata('success', 'we\'ve send an email to budihari47@gmail.com');
-    echo '<script>window.history.go(-1);</script>';
+	//echo '<script>window.history.go(-2);</script>';
 }
 else{
     $this->session->set_flashdata('alert', 'failed to send to your email');
@@ -1638,7 +1657,10 @@ else{
     echo $today;
 }
 } //end if time
-echo '<script>window.history.go(-1);</script>';
+else{
+	$this->session->set_flashdata('alert', 'You just resend the email');
+}
+//echo '<script>window.history.go(-1);</script>';
 $profil['title'] = "resend email";
 $this->template->olshop('reg_success', $profil);
 } //end form validation
