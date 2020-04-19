@@ -1,8 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
-<div id="faq">
-<div class="content">
+<div id="master-faq">
+<div class="content" style="margin:auto;">
 <div class="header" style="width: 100%;">
     <h1 style="font-size: 24px; text-align:center; padding:18px; padding-top:32px;">faq</h1>
     <hr style="border:solid 1px #ddd; margin:0px auto 18px auto; max-width:300px;">

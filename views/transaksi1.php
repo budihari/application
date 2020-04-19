@@ -97,7 +97,10 @@ thead th{
 
                   if ($today > $batas && $key->status_proses == 'not paid') {
                      echo 'expired';
-                     $this->db->update('');
+                     $t_order = array (
+                        'status_proses' => "expired"
+                     );
+                     $this->db->update('t_order', $t_order, ['id_order' => $key->id_order]);
                   } else {
                      echo $key->status_proses;
                   }

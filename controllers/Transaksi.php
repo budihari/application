@@ -320,7 +320,7 @@ class Transaksi extends CI_Controller {
             </td>
         </tr>
         <tr>
-		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
 
 		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
 	  </tr>
@@ -488,6 +488,84 @@ $message_admin = '
       $this->trans->delete(['t_order', 't_detail_order'], ['id_order' => $this->uri->segment(3)]);
 
       redirect('transaksi');
+   }
+
+   public function print_detail_transaksi()
+   {
+	   if(empty($this->uri->segment(3))){
+		redirect('transaksi');
+	   }
+		$table = "t_order o
+		JOIN t_detail_order do ON (o.id_order = do.id_order)
+		JOIN t_items i ON (do.id_item = i.id_item)";
+
+		$data['data'] = $this->trans->get_where($table, ['o.id_order' => $this->uri->segment(3)]);
+		$cek = $data['data']->row();
+	  	$api  = $this->db->get_where('t_profil', ['id_profil' => 1])->row();
+	  	$html = "";
+
+		$data['status'] = 0;
+		$data['response'] = 'nomor resi belum di input';
+		
+		if(!empty($cek->resi)){
+		$curl = curl_init();
+		
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://pro.rajaongkir.com/api/waybill",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "POST",
+		  CURLOPT_POSTFIELDS => "waybill=".$cek->resi."&courier=".$cek->kurir,
+		  CURLOPT_HTTPHEADER => array(
+			"content-type: application/x-www-form-urlencoded",
+			"key: ".$api->api_key
+		  ),
+		));
+		
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		
+		curl_close($curl);
+		
+		if ($err) {
+		  echo "cURL Error #:" . $err;
+		} else {
+			$result = json_decode($response, TRUE)['rajaongkir']['result'];
+			//print_r($result);
+			$html = "";
+			$arr = array();
+			if(!empty($result)){
+			for ($i=0; $i < count($result['manifest']); $i++) {
+				$a = $result['manifest'][$i]['manifest_date'].' '.$result['manifest'][$i]['manifest_time'].'_'.$result['manifest'][$i]['manifest_description'];
+				array_push($arr, $a);
+			}
+		
+			sort($arr);
+		
+			for ($i=0; $i < count($arr); $i++) {
+				$get = $arr[$i];
+				$result = explode("_",$get);
+				$html .= '<tr>
+				<td>'.$result[0].'</td><td>'.$result[1].'</td>
+				</tr>
+				';
+			}
+			$data['status'] = 1;
+			//$html = rtrim($html,'<br>');
+			}
+			else{
+				$result = json_decode($response, TRUE)['rajaongkir'];
+				$html = $result['status']['description'];
+				$data['status'] = 0;
+			}
+			$data['response'] = $html;
+		}
+	}
+
+		$this->template->custom('admin/printdetailtransaksi', $data);
    }
 
    public function detail()
@@ -735,7 +813,7 @@ if ($err) {
             </td>
         </tr>
         <tr>
-		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
 
 		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
 	  </tr>
@@ -827,11 +905,6 @@ $message_admin = '
                 <p><b>status</b><br>delivery process</p>
             </td>
         </tr>
-        <tr>
-		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
-
-		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
-	  </tr>
     </table>
   <hr>
   <div style="padding: 12px;">
@@ -880,7 +953,8 @@ $message_admin = '
 	  if ($this->email->send())
 	  {
 			$order = array (
-			'resi' => $this->input->post('resi'),
+			'detail'		=> $do,
+			'resi'			=> $this->input->post('resi'),
 		  	'status_proses' => "delivery process"
 	  		);
 			$this->trans->update('t_order', $order, ['id_order' => $id_order]);
@@ -888,7 +962,7 @@ $message_admin = '
 			$this->email->from($profil->email_toko, $profil->title);
 			//$this->email->to($order->email);
 			$this->email->to(
-				array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+				array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
 				);
 			$this->email->subject($subjek);
 			$this->email->message(

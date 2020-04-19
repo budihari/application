@@ -381,7 +381,7 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				</tr>
 				<tr>
 					<td><div style="background: rgba(10,42,59,1); border-radius:8px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'payment/confirm/'.$id_order.'">upload proof of payment</a></div></td>
-					<td><div style="background: rgba(10,42,59,1); border-radius:8px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$id_order.'">check transaction status</a></div></td>
+					<td><div style="background: rgba(10,42,59,1); border-radius:8px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
 				</tr>
 			</table>
 			<div style="padding: 12px;">

@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 <div class="x_panel">
    <div class="x_title">
-      <h2>Tambah Resi Pengiriman</h2>
+      <h2>Input Resi Pengiriman</h2>
      <div class="clearfix"></div>
    </div>
    <?php

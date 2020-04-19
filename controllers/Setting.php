@@ -6,7 +6,7 @@ class Setting extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->library(array('template', 'form_validation'));
+		$this->load->library(array('template', 'form_validation', 'encryption'));
 		$this->load->model('admin');
 	}
 
@@ -23,14 +23,16 @@ class Setting extends CI_Controller {
         $this->form_validation->set_rules('twitter', 'Twitter', 'required|min_length[5]|max_length[255]');
         $this->form_validation->set_rules('gplus', 'G+', 'required|min_length[5]|max_length[255]');
         $this->form_validation->set_rules('alamat', 'Alamat Toko', 'required|min_length[5]');
-				$this->form_validation->set_rules('email_toko', 'Email Toko', 'required|valid_email');
-				$this->form_validation->set_rules('pass_toko', 'Password Email Toko', 'required|min_length[5]');
-				$this->form_validation->set_rules('asal', 'ID Kota / Kabupaten', 'required|max_length[4]|numeric');
-				$this->form_validation->set_rules('api_key', 'Api Key', 'required|min_length[5]');
-				$this->form_validation->set_rules('rekening', 'Rekening', 'required|min_length[8]');
+		$this->form_validation->set_rules('email_toko', 'Email Toko', 'required|valid_email');
+		$this->form_validation->set_rules('pass_toko', 'Password Email Toko', 'required|min_length[5]');
+		$this->form_validation->set_rules('asal', 'ID Kota / Kabupaten', 'required|max_length[4]|numeric');
+		$this->form_validation->set_rules('api_key', 'Api Key', 'required|min_length[5]');
+		$this->form_validation->set_rules('rekening', 'Rekening', 'required|min_length[8]');
 
         if ($this->form_validation->run() == TRUE)
         {
+		$password = $this->encryption->decrypt($this->input->post('pass_toko', TRUE));
+		$apikey = $this->encryption->decrypt($this->input->post('api_key', TRUE));
           $profile = array(
               'title' => $this->input->post('title', TRUE),
               'phone' => $this->input->post('hp', TRUE),
@@ -38,12 +40,16 @@ class Setting extends CI_Controller {
               'facebook' => $this->input->post('fb', TRUE),
               'twitter' => $this->input->post('twitter', TRUE),
               'gplus' => $this->input->post('gplus', TRUE),
-							'email_toko' => $this->input->post('email_toko', TRUE),
-							'pass_toko' => $this->input->post('pass_toko', TRUE),
-							'asal' => $this->input->post('asal', TRUE),
-							'api_key' => $this->input->post('api_key', TRUE),
-							'rekening' => $this->input->post('rekening', TRUE)
-          );
+			  'email_toko' => $this->input->post('email_toko', TRUE),
+			  'asal' => $this->input->post('asal', TRUE),
+			  'rekening' => $this->input->post('rekening', TRUE)
+		  );
+		  if($this->input->post('pass_toko', TRUE) != 'the password'){
+			$profile['pass_toko'] = $this->input->post('pass_toko', TRUE);
+		  }
+		  if($this->input->post('api_key', TRUE) != 'the api key'){
+			$profile['api_key'] = $this->input->post('api_key', TRUE);
+		  }
 
           $this->admin->update('t_profil', $profile, ['id_profil' => 1]);
 		  
@@ -56,11 +62,11 @@ class Setting extends CI_Controller {
         $data['fb']       	= $this->input->post('fb', TRUE);
         $data['twitter']  	= $this->input->post('twitter', TRUE);
         $data['gplus']    	= $this->input->post('gplus', TRUE);
-				$data['mail_toko']   = $this->input->post('email_toko', TRUE);
-				$data['pass_toko']   = $this->input->post('pass_toko', TRUE);
-				$data['api_key']    	= $this->input->post('api_key', TRUE);
-				$data['asal']  	  	= $this->input->post('asal', TRUE);
-				$data['rekening']  	= $this->input->post('rekening', TRUE);
+		$data['mail_toko']   = $this->input->post('email_toko', TRUE);
+		$data['pass_toko']   = $this->input->post('pass_toko', TRUE);
+		$data['api_key']   	= $this->input->post('api_key', TRUE);
+		$data['asal']  	  	= $this->input->post('asal', TRUE);
+		$data['rekening']  	= $this->input->post('rekening', TRUE);
 
       } else {
 
@@ -72,11 +78,11 @@ class Setting extends CI_Controller {
         $data['fb']       	= $profil->facebook;
         $data['twitter']  	= $profil->twitter;
         $data['gplus']    	= $profil->gplus;
-				$data['mail_toko']   = $profil->email_toko;
-				$data['pass_toko']   = $profil->pass_toko;
-				$data['api_key']    	= $profil->api_key;
-				$data['asal']	    	= $profil->asal;
-				$data['rekening']    = $profil->rekening;
+		$data['mail_toko']  = $profil->email_toko;
+		$data['pass_toko']  = 'the password';
+		$data['api_key']    = 'the api key';
+		$data['asal']	    = $profil->asal;
+		$data['rekening']   = $profil->rekening;
       }
 
 		$this->template->admin('admin/setting', $data);

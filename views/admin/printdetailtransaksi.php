@@ -2,12 +2,10 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 $user = $data->row();
 ?>
-<div class="x_panel">
+
+<div style="background: #ffffff; margin:auto; max-width:800px; padding: 12px;">
    <div class="x_title">
       <h2>Detail Transaksi #<?= $user->id_order;?></h2>
-      <div style="float:right">
-         <a href="<?= base_url('transaksi/print_detail_transaksi/'.$user->id_order); ?>" class="btn btn-primary">Print</a>
-      </div>
      <div class="clearfix"></div>
    </div>
    <table style="width:100%;">
@@ -87,13 +85,7 @@ $user = $data->row();
        </tr>
        <tr>
            <td style="width:30%; min-width:120px;">Nomor Resi</td>
-           <?php
-           $ubah_resi = '';
-               if(!empty($user->resi)){
-                  $ubah_resi = '&nbsp;( <a href="'.site_url('transaksi/resi/'.$user->id_order).'">ubah resi</a> )';
-               }
-           ?>
-           <td style="width:65%;">: <?= $user->resi.$ubah_resi; ?></td>
+           <td style="width:65%;">: <?= $user->resi; ?></td>
        </tr>
    </table>
    <hr>
@@ -128,13 +120,14 @@ $user = $data->row();
          <?php
          if(!empty($user->bukti)){
          ?>
-         <img style="max-width: 80%;" src="<?php echo base_url().'assets/bukti/'.$user->bukti;?>">
+         <img style="max-width: 500px; max-height:500px;" src="<?php echo base_url().'assets/bukti/'.$user->bukti;?>">
          <?php
          }
          ?>
       </div>
    </div>
    <hr>
+   <div class="row" style="padding: 0px 12px;">
    <div class="x_content">
       <div class="row">
          <div class="col-md-8 col-sm-12">
@@ -174,27 +167,10 @@ $user = $data->row();
                   <td style="text-align:right"><?=number_format($user->total, 0, ',','.')?></td>
                </tr>
             </table>
-            <a href="#" class="btn btn-default" onclick="window.history.go(-1)">Kembali</a>
-            <?php
-            if ($user->status_proses == 'not paid' && $this->session->userdata('level_admin') == '21') {
-
-               $btn = '<a href="'.base_url('pembayaran/add_pembayaran/'.$user->id_order).'" class="btn btn-default">Tambah Pembayaran</a>';
-   
-            } else {
-   
-               if ($user->status_proses == 'paid' && $this->session->userdata('level_admin') == '11') {
-                  $btn = '<a href="'.site_url('transaksi/process/'.$user->id_order).'" class="btn btn-success"><i class="fa fa-circle-o-notch"></i>&nbsp;Proses</a>';
-               } elseif ($user->status_proses == 'on process' && $this->session->userdata('level_admin') == '11') {
-                  $btn = '<a href="'.site_url('transaksi/resi/'.$user->id_order).'" class="btn btn-success"><i class="fa fa-barcode"></i>&nbsp;Input Resi Pengiriman</a>';
-               } else {
-                  $btn = '';
-               }
-            }
-
-               echo $btn;
-            
-            ?>
          </div>
       </div>
    </div>
+   </div>
+
+
 </div>

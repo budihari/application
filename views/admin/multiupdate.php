@@ -19,7 +19,7 @@ echo '<div style="position:fixed; z-index:9; top:54px; left:0; right:0;">';
 ?>
 <div class="x_panel">
    <div class="x_title">
-      <h2>Update Item Sekaligus</h2>
+      <h2>Import / Export CSV</h2>
      <div class="clearfix"></div>
    </div>
 

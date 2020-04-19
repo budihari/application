@@ -22,6 +22,19 @@ class Payment extends CI_Controller {
 	{
 		if ($this->session->userdata('user_id'))
       {
+      $user = $this->app->get_where('t_users', ['username' => $this->session->userdata('username')])->row();
+      $table = "t_order";
+      $data['get'] = $this->app->get_where($table, ['id_order' => $this->uri->segment(3)]);
+      if($data['get']->num_rows() == 1){
+         $order = $data['get']->row();
+         if($user->email != $order->email){
+			redirect('home/transaksi');
+		   }
+      }
+      else{
+         redirect('home/transaksi');
+      }
+      
       if ($this->input->post('submit', TRUE) == 'Submit') {
          $this->db->select_max('idpembayaran');
          $id = $this->db->get('buktipembayaran') -> row();
@@ -73,7 +86,12 @@ class Payment extends CI_Controller {
                   'bank_asal' => $this->input->post('originbank', TRUE),
                   'bank_tujuan' => $this->input->post('tobank', TRUE),
                   'bukti' => $gbr['file_name'],
-                  'status' => "not verified"
+                  'status' => "awaiting verification",
+                  'detail_pembayaran' => "confirm by ".$this->session->userdata('username')
+                  );
+                  $t_order = array (
+                     'status_proses' => "awaiting verification",
+                     'detail'        => "confirm by ".$this->session->userdata('username')
                   );
                
                   $profil 	= $this->app->get_where('t_profil', ['id_profil' => 1])->row();
@@ -118,6 +136,7 @@ class Payment extends CI_Controller {
                   if ($this->email->send())
                   {
                      $this->app->insert('buktipembayaran', $items);
+                     $this->db->update('t_order', $t_order, ['id_order' => $id_order->id_order]);
                      $this->session->set_flashdata('success', 'payment has been sent');
                   }
                   redirect('payment');

@@ -26,14 +26,19 @@ $data = $get->row();
 <div style="text-align: right;">
 <?php
 $bayar = $pembayaran->row();
-if(empty($data->status_proses) || $data->status_proses != 'not paid'){
+if(empty($data->status_proses) || $data->status_proses != 'not paid' && $data->status_proses != 'expired'){
 ?>
 <button class="btn green" style="border-radius: 6px;"><i class="fa fa-check"></i>&nbsp;paid</button>
 <?php
 }
+else if($data->status_proses == 'expired'){
+   ?>
+   <button class="btn grey" style="border-radius: 6px;">expired</button>
+   <?php
+}
 else{
 ?>
-<button class="btn grey" style="border-radius: 6px;" onclick="document.location = '<?php echo base_url();?>payment/confirm/<?php echo $data->id_order;?>'">confirm payment</button>
+<button class="btn grey" style="border-radius: 6px;" onclick="document.location = '<?php echo base_url();?>payment/confirm/<?php echo $data->id_order;?>'">upload proof of payment</button>
 <button class="btn grey" style="border-radius: 6px;" onclick="document.location='<?php echo base_url();?>checkout/payment_info/<?php echo $data->id_order;?>'">how to pay</button>
 <?php
 }
@@ -124,7 +129,28 @@ else{
          <td>payment method</td><td><?php echo $data->payment_method;?></td>
       </tr>
       <tr>
-         <td>status</td><td><?php echo $data->status_proses;?></td>
+         <?php
+            $status = $data->status_proses;
+            $batas = (abs(strtotime($data->bts_bayar)));
+            $today = (abs(strtotime(date("Y-m-d"))));
+
+               if ($today > $batas && $status == 'not paid') {
+                  $status = 'expired';
+                  $t_order = array (
+                     'status_proses' => "expired"
+                  );
+                  $this->db->update('t_order', $t_order, ['id_order' => $data->id_order]);
+               }
+            $query = "SELECT status FROM buktipembayaran WHERE id_order = '$data->id_order'";
+            $bukti = $this->db->query($query);
+            if($bukti->num_rows() == 1){
+               $bukti = $bukti->row();
+               if($bukti->status == 'awaiting verification'){
+                  $status = $bukti->status;
+               }
+            }
+         ?>
+         <td>status</td><td><?php echo $status;?></td>
       </tr>
    </table>
    </div>

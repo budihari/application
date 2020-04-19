@@ -257,7 +257,7 @@ class Pembayaran extends CI_Controller {
 					<td><p><b>payment status</b><br>'.$order->status.'</p></td>
 				</tr>
 				<tr>
-					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
 					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
 				</tr>
 			</table>
@@ -427,10 +427,15 @@ class Pembayaran extends CI_Controller {
 		$detail = $detail.', invalid by '.$this->session->userdata('user').' at '.$today;
 	  }
 	  $spek = array (
-					'status' => "not valid",
+					'status' => "invalid",
 					'detail_pembayaran' => $detail
 				);
 	$this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $idpembayaran]);
+	$order = array (
+		'status_proses' => "not paid",
+		'detail' => $detail
+	);
+$this->bayar->update('t_order', $order, ['id_order' => $cek->id_order]);
 	  $tgl = date("ymd");
 	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
 	  $table = "t_order o
@@ -438,9 +443,9 @@ class Pembayaran extends CI_Controller {
 			  JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
 	  $order = $this->db->get_where($table, ['bukti.idpembayaran' => $this->uri->segment(3)])->row();
 	  $status = $order->status;
-	  if($status == "not valid"){
-		$status = "invalid";
-	  }
+	  //if($status == "not valid"){
+	  //	$status = "invalid";
+	  //}
 	  $table = '';
 	  $table1 = "t_detail_order detail
 	  JOIN t_items i ON (detail.id_item = i.id_item)";
@@ -494,7 +499,7 @@ class Pembayaran extends CI_Controller {
 		  <td><p><b>payment status</b><br>'.$status.'</p></td>
 	  </tr>
 	  <tr>
-		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/detail_transaksi/'.$order->id_order.'">check transaction status</a></div></td>
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
 		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
 	  </tr>
   </table>
@@ -648,7 +653,7 @@ $message_admin = '
 	//redirect('pembayaran');
 	  
 	//echo '<script type="text/javascript">window.history.go(-1)</script>';
-   }
+   } //end public function not valid
 
    public function delete()
    {
