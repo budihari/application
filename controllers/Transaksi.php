@@ -96,7 +96,11 @@ class Transaksi extends CI_Controller {
 					$btn = '<a href="'.site_url('transaksi/process/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-circle-o-notch"></i></a>';
 				} elseif ($i->status_proses == 'on process' && $this->session->userdata('level_admin') == '11') {
 					$btn = '<a href="'.site_url('transaksi/resi/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-barcode"></i></a>';
-				} else {
+				}
+				else if ($i->status_proses == 'not paid' && $this->session->userdata('level_admin') == '21'){
+					$btn = '<a href="'.site_url('pembayaran/valid/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
+				}
+				else {
 					$btn = '';
 				}
 			}
@@ -1079,13 +1083,144 @@ $message_admin = '
 		$awal  = $thn.'-'.$bln.'-01';
 		$akhir = $thn.'-'.$bln.'-31';
 
-		$where = ['tgl_pesan >=' => $awal, 'tgl_pesan <=' => $akhir, 'status_proses !=' => 'belum'];
+		//$where = ['tgl_pesan >=' => $awal, 'tgl_pesan <=' => $akhir, 'status_proses !=' => 'belum'];
+		//$query = "SELECT detail.id_order, detail.id_item, i.nama_item, o.nama_pemesan, o.tgl_pesan, o.bts_bayar, o.kode_unik, o.total, o.kupon, o.potongan, o.ongkir, detail.qty, detail.biaya from t_detail_order detail JOIN t_order o ON (detail.id_order = o.id_order) JOIN t_items i ON (detail.id_item = i.id_item) WHERE o.tgl_pesan LIKE '%$thn-$bln%' AND o.status_proses != 'expired' AND o.status_proses != 'not paid'";
+		$query = "SELECT * from t_order  WHERE tgl_pesan LIKE '%$thn-$bln%' AND status_proses != 'expired' AND status_proses != 'not paid'";
 
-		$data['data'] 	= $this->trans->report($where);
+		$data['data'] 	= $this->db->query($query);
 		$data['bln'] 	= $bln;
 		$data['thn']	= $thn;
 
 		$this->template->admin('admin/laporan', $data);
+	}
+
+	public function print()
+	{
+		$this->cek_login();
+		if (!is_numeric($this->uri->segment(3)) || !is_numeric($this->uri->segment(4)) )
+		{
+			redirect('transaksi');
+		}
+
+		$bln 	= $this->uri->segment(3);
+		$thn 	= $this->uri->segment(4);
+		$awal = $thn.'-'.$bln.'-01';
+		$akhir= $thn.'-'.$bln.'-31';
+
+		//$where = ['tgl_pesan >=' => $awal, 'tgl_pesan <=' => $akhir, 'status_proses !=' => 'belum'];
+		$query = "SELECT * from t_order  WHERE tgl_pesan LIKE '%$thn-$bln%' AND status_proses != 'expired' AND status_proses != 'not paid'";
+
+		$data['data'] 	= $this->db->query($query);
+		$data['bln'] 	= $bln;
+		$data['thn'] 	= $thn;
+
+		$this->template->custom('admin/printlaporan', $data);
+		//$this->load->view('admin/printlaporan', $data);
+	}
+
+	public function download_laporan()
+	{
+	$this->cek_login();
+	$connect = mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $this->db->database);
+	$bln 	= $this->uri->segment(3);
+	$thn 	= $this->uri->segment(4);
+	switch ($bln) {
+		case '01':
+		   $Bulan = 'Januari';
+		   break;
+		case '02':
+		   $Bulan = 'Februari';
+		   break;
+		case '03':
+		   $Bulan = 'Maret';
+		   break;
+		case '04':
+		   $Bulan = 'April';
+		   break;
+		case '05':
+		   $Bulan = 'Mei';
+		   break;
+		case '06':
+		   $Bulan = 'Juni';
+		   break;
+		case '07':
+		   $Bulan = 'Juli';
+		   break;
+		case '08':
+		   $Bulan = 'Agustus';
+		   break;
+		case '09':
+		   $Bulan = 'September';
+		   break;
+		case '10':
+		   $Bulan = 'Oktober';
+		   break;
+		case '11':
+		   $Bulan = 'November';
+		   break;
+		case '12':
+		   $Bulan = 'Desember';
+		   break;
+	 }
+	$awal = $thn.'-'.$bln.'-01';
+	$akhir= $thn.'-'.$bln.'-31';
+	header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=laporan bulan '.$Bulan.' '.$thn.'.csv');
+      $output = fopen("php://output", "w");
+
+      fputcsv($output, array('Outlet', 'Number', 'Customer', 'Date', 'Time','Coupon Code', 'Discount Amount', 'Ongkir', 'Product Code', 'Quantity', 'Unit Price', 'Subtotal'));
+
+      $query = "SELECT detail.id_order, detail.id_item, i.nama_item, o.nama_pemesan, o.tgl_pesan, o.kupon, o.potongan, o.ongkir, detail.qty, detail.biaya from t_detail_order detail JOIN t_order o ON (detail.id_order = o.id_order) JOIN t_items i ON (detail.id_item = i.id_item) WHERE o.tgl_pesan LIKE '%$thn-$bln%' AND o.status_proses != 'expired' AND o.status_proses != 'not paid'";
+
+	  $result = mysqli_query($connect, $query);
+	  $id_order = '';
+
+      while($d = mysqli_fetch_array($result))
+      {
+		$tgl_pesan = date('d M Y / H:i:s', strtotime($d['tgl_pesan']));
+		$waktu_pesan = explode(" / ",$tgl_pesan);
+		$nama_item = explode(" / ",$d['nama_item']);
+		$unit_price = $d['biaya'] / $d['qty'];
+		if($id_order != $d['id_order']){
+			$id_order = $d['id_order'];
+			$outlet = 'Waterplus+ Store';
+			$nama_pemesan = $d['nama_pemesan'];
+			$tgl = $waktu_pesan[0];
+			$waktu = $waktu_pesan[1];
+			$kupon = $d['kupon'];
+			$potongan = $d['potongan'];
+			$ongkir = $d['ongkir'];
+		}
+		else{
+			$id_order = '';
+			$outlet = '';
+			$nama_pemesan = '';
+			$tgl = '';
+			$waktu = '';
+			$kupon = '';
+			$potongan = '';
+			$ongkir = '';
+		}
+		$item = array(
+			$outlet,
+			$id_order,
+			$nama_pemesan,
+			$tgl,
+			$waktu,
+			$kupon,
+			$potongan,
+			$ongkir,
+			$nama_item[0],
+			$d['qty'],
+			$unit_price,
+			$d['biaya']
+		);
+
+           fputcsv($output, $item);
+		   $id_order = $d['id_order'];
+      }
+
+	  fclose($output);
 	}
 
 	public function cetak()

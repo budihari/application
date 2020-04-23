@@ -169,28 +169,39 @@ class Pembayaran extends CI_Controller {
 	  }
 	  date_default_timezone_set("Asia/Bangkok");
 	  $today = date("Y-m-d H:i:s");
-      $idpembayaran = $this->uri->segment(3);
-	  $cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $idpembayaran)) -> row();
-	  $id_order = $cek->id_order;
-	  $cekorder = $this->bayar->get_where('t_order', array('id_order' => $id_order)) -> row();
-	  $detail = $cek->detail_pembayaran;
-	  $do = $cekorder->detail;
-	  if(empty($detail)){
-		$detail = 'valid by '.$this->session->userdata('user').' at '.$today;
+	  $id = $this->uri->segment(3);
+	  $idpembayaran = '';
+	  $cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $id));
+	  if($cek->num_rows() == 1){
+		$cek = $cek->row();
+		$id_order = $cek->id_order;
+		$idpembayaran = $cek->idpembayaran;
+		$cekorder = $this->bayar->get_where('t_order', array('id_order' => $id_order)) -> row();
+		$detail = $cek->detail_pembayaran;
+		$do = $cekorder->detail;
+		if(empty($detail)){
+			$detail = 'valid by '.$this->session->userdata('user').' at '.$today;
+		}
+		else{
+			$detail = $detail.', valid by '.$this->session->userdata('user').' at '.$today;
+		}
+		$spek = array (
+						'status' => "valid",
+						'detail_pembayaran' => $detail
+					);
+		$this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $id]);
 	  }
 	  else{
-		$detail = $detail.', valid by '.$this->session->userdata('user').' at '.$today;
+		$cek = $this->bayar->get_where('t_order', array('id_order' => $id))->row();
+		$id_order = $cek->id_order;
+		$do = $cek->detail;
 	  }
-	  $spek = array (
-					'status' => "valid",
-					'detail_pembayaran' => $detail
-				);
-	  $this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $idpembayaran]);
+	  
 	  if(empty($do)){
-		$do = 'paid by '.$this->session->userdata('user').' at '.$today;
+		$do = 'verified by '.$this->session->userdata('user').' at '.$today;
 	  }
 	  else{
-		$do = $do.', paid by '.$this->session->userdata('user').' at '.$today;
+		$do = $do.', verified by '.$this->session->userdata('user').' at '.$today;
 	  }
 	  $table_order = array (
       				'bukti' => $cek->bukti,
@@ -200,10 +211,18 @@ class Pembayaran extends CI_Controller {
 	  $this->bayar->update('t_order', $table_order, ['id_order' => $id_order]);
 		$tgl = date("ymd");
 		$profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
-		$table = "t_order o
+		if(!empty($idpembayaran)){
+			$table = "t_order o
 				JOIN t_users usr ON (o.email = usr.email)
 				JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
-		$order = $this->db->get_where($table, ['bukti.idpembayaran' => $this->uri->segment(3)])->row();
+			$order = $this->db->get_where($table, ['bukti.idpembayaran' => $idpembayaran])->row();
+		}
+		else{
+			$table = "t_order o
+				JOIN t_users usr ON (o.email = usr.email)";
+			$order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
+		}
+		
 		$table = '';
 		$table1 = "t_detail_order detail
 		JOIN t_items i ON (detail.id_item = i.id_item)";
@@ -215,7 +234,7 @@ class Pembayaran extends CI_Controller {
 			$subtotal = $qty * $harga;
 			$table .= '<tr><td>'.$row->nama_item.' ('.$qty.' x rp '.number_format($harga, 0, ',', '.').')</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($subtotal, 0, ',', '.').'</td></tr>';
 		}
-		$subjek = 'payment received for ID '.$idpembayaran;
+		$subjek = 'payment received for transaction ID '.$id_order;
 		//proses
 		$this->load->library('email');
 		$config['smtp_user'] = $profil->email_toko; //isi dengan email gmail
@@ -378,10 +397,8 @@ class Pembayaran extends CI_Controller {
 
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		//$this->email->to($order->email);
-		$this->email->to(
-			array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-			);
+		$this->email->to('budihari47@gmail.com');
+		//$this->email->to(array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
 		$this->email->subject($subjek);
 		$this->email->message($message_admin);
 		if ($this->email->send())

@@ -124,7 +124,7 @@ class Trans extends CI_Model {
 
    function report($where = '')
    {
-      $this->db->select(array('o.id_order AS id_order', 'nama_pemesan', 'kota', 'total', 'SUM(biaya) AS biaya'));
+      //$this->db->select(array('o.id_order AS id_order', 'nama_pemesan', 'kota', 'total', 'SUM(biaya) AS biaya'));
 
       $this->db->from('t_order o JOIN t_detail_order do ON (o.id_order = do.id_order)');
       $this->db->where($where);

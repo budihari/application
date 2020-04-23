@@ -367,10 +367,11 @@ function postForm() {
               ],
 
           });
-         });
+         
          <?php
             }
          ?>
+         });
          </script>
       <?php } ?>
    </body>
