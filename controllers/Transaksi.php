@@ -85,20 +85,24 @@ class Transaksi extends CI_Controller {
       foreach ($list as $i) {
 
 			$batas = $i->bts_bayar;
+			$btn1 = '<a href="'.base_url().'transaksi/detail/'.$i->id_order.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>';
 
 			if ($i->status_proses == 'not paid' && $this->session->userdata('level_admin') == 11) {
 
-				$btn = '<a href="'.site_url('transaksi/delete/'.$i->id_order).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin Ingin Menghapus Data ini ?\')"><i class="fa fa-trash"></i></a>';
+				//$btn = '<a href="'.site_url('transaksi/delete/'.$i->id_order).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin Ingin Menghapus Data ini ?\')"><i class="fa fa-trash"></i></a>';
+
+				$btn = '<a href="'.site_url('transaksi/cancel/'.$i->id_order).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin ingin membatalkan pesanan ini ?\')"><i class="fa fa-close"></i></a>';
 
 			} else {
 
 				if ($i->status_proses == 'paid' && $this->session->userdata('level_admin') == '11') {
-					$btn = '<a href="'.site_url('transaksi/process/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-circle-o-notch"></i></a>';
+					$btn1 = '<a href="'.site_url('transaksi/process/'.$i->id_order).'" class="btn btn-success btn-xs" onclick="return confirm(\'Yakin ingin memproses pesanan ini ?\')"><i class="fa fa-circle-o-notch"></i></a>';
+					$btn = '<a href="'.site_url('transaksi/cancel/'.$i->id_order).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin ingin membatalkan pesanan ini ?\')"><i class="fa fa-close"></i></a>';
 				} elseif ($i->status_proses == 'on process' && $this->session->userdata('level_admin') == '11') {
 					$btn = '<a href="'.site_url('transaksi/resi/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-barcode"></i></a>';
 				}
 				else if ($i->status_proses == 'not paid' && $this->session->userdata('level_admin') == '21'){
-					$btn = '<a href="'.site_url('pembayaran/valid/'.$i->id_order).'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
+					$btn = '<a href="'.site_url('pembayaran/valid/'.$i->id_order).'" class="btn btn-success btn-xs" onclick="return confirm(\'Yakin ingin menandai ini sebagai sudah dibayar ?\')"><i class="fa fa-check"></i></a>';
 				}
 				else {
 					$btn = '';
@@ -117,7 +121,7 @@ class Transaksi extends CI_Controller {
 		 $row[] = $bts_waktu[0].'<br>'.$bts_waktu[1];
 		 $row[] = "Rp ".number_format($i->total, 0, ',', '.');
 		 $row[] = $i->status_proses;
-         $row[] = '<a href="'.base_url().'transaksi/detail/'.$i->id_order.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>'.$btn;
+         $row[] = $btn1.$btn;
 
          $data[] = $row;
       }
@@ -223,9 +227,8 @@ class Transaksi extends CI_Controller {
 	  $today = date("Y-m-d H:i:s");
 	  $id_order = $this->uri->segment(3);
 	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
-	  $table = "t_order o
-				JOIN t_users usr ON (o.email = usr.email)
-				JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
+	  //$table = "t_order o JOIN t_users usr ON (o.email = usr.email) JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
+	  $table = "t_order o JOIN t_users usr ON (o.email = usr.email)";
 	  $order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
 	  $do = $order->detail;
 	  if(empty($do)){
@@ -240,7 +243,6 @@ class Transaksi extends CI_Controller {
 				);
 	  $this->trans->update('t_order', $tableorder, ['id_order' => $id_order]);
 	  $order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
-	  $subjek = 'your order has been process. ID order '.$id_order;
 	  $alamat = array();
 	  $alamat1 = array();
          if (!empty($order->tujuan)) {
@@ -282,6 +284,8 @@ class Transaksi extends CI_Controller {
 			 $table .= '<tr><td>'.$row->nama_item.' ('.$qty.' x rp '.number_format($harga, 0, ',', '.').')</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($subtotal, 0, ',', '.').'</td></tr>';
 		 }
 	  //proses
+	  $subjek = 'your order has been process. ID order '.$id_order;
+	  $subjek_admin = 'customer order has been process. ID order '.$id_order;
 	  $this->load->library('email');
 	  $config['smtp_user'] = $profil->email_toko; //isi dengan email gmail
 	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
@@ -461,10 +465,13 @@ $message_admin = '
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
 		//$this->email->to($order->email);
+		//$this->email->to(
+		  //array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		  //);
 		$this->email->to(
-		  array($order->email,'budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-		  );
-		$this->email->subject($subjek);
+		  array('budihari47@gmail.com')
+		);
+		$this->email->subject($subjek_admin);
 		$this->email->message(
 		$message_admin
 		);
@@ -723,7 +730,6 @@ if ($err) {
 	  else{
 		$do = $do.', delivery process by '.$this->session->userdata('user').' at '.$today;
 	  }
-	  $subjek = 'your order with ID '.$id_order.' has been submitted to the courier';
 	  $alamat = array();
 	  $alamat1 = array();
          if (!empty($order->tujuan)) {
@@ -765,6 +771,8 @@ if ($err) {
 		 }
 	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
 	  //proses
+	  $subjek = 'your order with ID '.$id_order.' has been submitted to the courier';
+	  $subjek_admin = 'customer order with ID '.$id_order.' has been submitted to the courier';
 	  $this->load->library('email');
 	  $config['smtp_user'] = $profil->email_toko; //isi dengan email gmail
 	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
@@ -965,10 +973,13 @@ $message_admin = '
 			$this->email->initialize($config);
 			$this->email->from($profil->email_toko, $profil->title);
 			//$this->email->to($order->email);
+			//$this->email->to(
+			//	array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+			//	);
 			$this->email->to(
-				array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-				);
-			$this->email->subject($subjek);
+				array('budihari47@gmail.com')
+			);
+			$this->email->subject($subjek_admin);
 			$this->email->message(
 			$message_admin
 			);
@@ -1012,6 +1023,313 @@ $message_admin = '
 
       $this->template->admin('admin/resi', $data);
    }
+
+   	public function cancel()
+	{
+		$this->cek_login();
+		date_default_timezone_set("Asia/Bangkok");
+	  	$today = date("Y-m-d H:i:s");
+		if (!is_numeric($this->uri->segment(3)))
+		{
+		echo '<script type="text/javascript">window.history.go(-1)</script>';
+		}
+		$table = 't_order o
+		JOIN t_users usr ON (o.email = usr.email)';
+		$cek = $this->db->get_where($table, array('o.id_order' => $this->uri->segment(3)));
+		if ($this->input->post('formbatal', TRUE) == 'Submit') {
+		//load libarary form validation
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('alasan_batal', 'Alasan Batal', 'required');
+		if ($this->form_validation->run() == TRUE)
+			{
+			$id_order = $this->uri->segment(3);
+			$table = 't_order o
+			JOIN t_users usr ON (o.email = usr.email)';
+			$cek = $this->db->get_where($table, array('o.id_order' => $id_order)) -> row();
+			$order = $cek;
+			$alasan = $this->input->post('alasan_batal');
+			if($alasan = 'lainnya'){
+				$alasan = strtolower($this->input->post('alasan_lainnya'));
+				$reason = "Sorry, your order has been canceled due to the following reason '".$alasan."'";
+			}
+			$do = $cek->detail;
+			if(empty($do)){
+				$do = 'canceled by '.$this->session->userdata('user').' at '.$today;
+			  }
+			  else{
+				$do = $do.', canceled by '.$this->session->userdata('user').' at '.$today;
+			  }
+			$d = array (
+				'status_proses' => 'canceled',
+				'alasan'		=> $alasan,
+				'detail'		=> $do
+			);
+			$this->db->update('t_order', $d, ['id_order' => $id_order]);
+
+		$table = '';
+		 $table1 = "t_detail_order detail
+		 JOIN t_items i ON (detail.id_item = i.id_item)";
+		 $detail = $this->db->get_where($table1, ['detail.id_order' => $order->id_order]);
+		 foreach ($detail->result() as $row)
+		 {
+			 $harga = $row->harga;
+			 $qty = $row->qty;
+			 $subtotal = $qty * $harga;
+			 $table .= '<tr><td>'.$row->nama_item.' ('.$qty.' x rp '.number_format($harga, 0, ',', '.').')</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($subtotal, 0, ',', '.').'</td></tr>';
+		 }
+	  //proses
+	  $profil = $this->db->get_where('t_profil', ['id_profil' => '1'])->row();
+		$alamat = array();
+	  	$alamat1 = array();
+         if (!empty($order->tujuan)) {
+            array_push($alamat, $order->tujuan);
+         }
+         if (!empty($order->subdistrict)) {
+            $subdistrict = explode(",", $order->subdistrict);
+            if (!empty($subdistrict[1])) {
+               array_push($alamat, $subdistrict[1]);
+            }
+         }
+         if (!empty($order->kota)) {
+            $kota = explode(",", $order->kota);
+            if (!empty($kota[1])) {
+               array_push($alamat, $kota[1]);
+            }
+         }
+         if (!empty($order->provinsi)) {
+            $provinsi = explode(",", $order->provinsi);
+            if (!empty($provinsi[1])) {
+               array_push($alamat1, $provinsi[1]);
+            }
+         }
+         if (!empty($order->pos)) {
+               array_push($alamat1, $order->pos);
+         }
+		 $alamat = join(", ", $alamat);
+		 $alamat1 = join(", ", $alamat1);
+	  $subjek = 'your order has been canceled. ID order '.$id_order;
+	  $subjek_admin = 'customer order has been canceled. ID order '.$id_order;
+	  $this->load->library('email');
+	  $config['smtp_user'] = $profil->email_toko; //isi dengan email gmail
+	  $config['smtp_pass'] = $profil->pass_toko; //isi dengan password
+	  $ongkir = $cek->ongkir;
+	  if($alasan == 'insufficient stock'){
+			$reason = "sorry, your order has been canceled because we don't have enough stock. If you have already paid for your order, please confirm with us.";
+	  }
+	  else{
+			$reason = "sorry, your order has been canceled due to the following reason '".$alasan."'";
+	  }
+
+	  $message_user = '
+	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>
+	  Pesanan diproses
+  </title>
+  <style>
+  *{
+	  font-family: arial;
+  }
+  </style>
+</head>    
+<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+  <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+  <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+		<h1 style="font-size: 24px;">your order has been canceled</h1>
+    </div>
+  <hr>
+  <div class="content" style="padding: 12px;">
+        <p>hi '.$order->username.'</p>
+        <p style="margin: 0px;">'.$reason.'</p>
+  </div>
+  <table style="width: 100%;" cellpadding="12">
+        <tr>
+            <td style="width: 50%;"><p><b>ID order</b><br>'.$order->id_order.'</p></td>
+            <td style="width: 50%;"><p><b>order date</b><br>'.date('d M Y', strtotime($order->tgl_pesan)).'</p></td>
+        </tr>
+        <tr>
+            <td valign="top"><p><b>address</b><br>
+                <span style="font-size: 14px; line-height: 20px;">'.$order->nama_pemesan.'<br>'.$alamat.'<br>'.$alamat1.'<br>phone: '.$order->telepon.'</span>
+            </p></td>
+            <td valign="top">
+                <p><b>status</b><br>canceled</p>
+            </td>
+        </tr>
+        <tr>
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
+
+		  <td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'">buy again</a></div></td>
+	  </tr>
+    </table>
+  <hr>
+  <div style="padding: 12px;">
+	  <h2 style="margin: 0px; font-size: 24px;">your order</h2>
+  </div>
+  <hr>
+  <div style="padding: 0px 4px;">
+	  <table cellpadding="8" style="width:100%;">
+	  '.$table.'
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+		  <td colspan="3"><hr style="margin:0px;"></td>
+	  </tr>
+  
+		  <tr>
+		  <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+		  </tr>
+	  </table>
+	  <br>
+	  <div style="text-align: center; padding: 12px; border-radius: 8px; background: #ffa; font-size: 14px;">
+		  <p>please ensure that you do not give any proof of payment and/or payment details to any party apart from waterplus+</p>
+	  </div>
+	  <hr>
+  </div>
+	  <div style="padding: 0px 12px;">
+		  <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+	  </div>
+	  <hr>
+	  <div>
+		  <p>&copy; copyright 2020</p>
+	  </div>
+  </div>
+</body>
+</html>';
+
+$message_admin = '
+	  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>
+	  Pesanan diproses
+  </title>
+  <style>
+  *{
+	  font-family: arial;
+  }
+  </style>
+</head>    
+<body style="background: #ddd; min-width: 600px; padding: 24px 6px;">
+  <div style="max-width: 700px; min-height: 500px; margin: auto; background: #fff; padding: 24px 12px; border-radius: 12px;">
+  <div style="margin:auto; max-width: 500px; text-align: center;" class="icon-bayar">
+		<h1 style="font-size: 24px;">customer order has been canceled</h1>
+    </div>
+  <hr>
+  <div class="content" style="padding: 12px;">
+        <p>hi admin</p>
+        <p style="margin: 0px;">customer order with ID '.$order->id_order.' has been canceled due to the following reason "'.$alasan.'".</p>
+  </div>
+  <table style="width: 100%;" cellpadding="12">
+        <tr>
+            <td style="width: 50%;"><p><b>ID order</b><br>'.$order->id_order.'</p></td>
+            <td style="width: 50%;"><p><b>order date</b><br>'.date('d M Y', strtotime($order->tgl_pesan)).'</p></td>
+        </tr>
+        <tr>
+            <td valign="top"><p><b>address</b><br>
+                <span style="font-size: 14px; line-height: 20px;">'.$order->nama_pemesan.'<br>'.$alamat.'<br>'.$alamat1.'<br>phone: '.$order->telepon.'</span>
+            </p></td>
+            <td valign="top">
+                <p><b>status</b><br>canceled</p>
+            </td>
+        </tr>
+    </table>
+  <hr>
+  <div style="padding: 12px;">
+	  <h2 style="margin: 0px; font-size: 24px;">customer order</h2>
+  </div>
+  <hr>
+  <div style="padding: 0px 4px;">
+	  <table cellpadding="8" style="width:100%;">
+	  '.$table.'
+	  <tr>
+	  <td>discount ('.$order->kupon.')</td><td style="text-align:right; color:red;">rp</td><td style="text-align:right; color:red;">'.number_format($order->potongan, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>unique code</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->kode_unik, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+	  <td>delivery ( '.$order->kurir.'/'.$order->service.' )</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($ongkir, 0, ',', '.').'</td>
+	  </tr>
+	  <tr>
+		  <td colspan="3"><hr style="margin:0px;"></td>
+	  </tr>
+  
+		  <tr>
+		  <td>total</td><td style="text-align:right;">rp</td><td style="text-align:right;">'.number_format($order->total, 0, ',', '.').'</td>
+		  </tr>
+	  </table>
+	  <hr>
+  </div>
+	  <div style="padding: 0px 12px;">
+		  <p style="font-size: 14px;">please do not reply, this is a system generated email.</p>
+	  </div>
+	  <hr>
+	  <div>
+		  <p>&copy; copyright 2020</p>
+	  </div>
+  </div>
+</body>
+</html>';
+
+	  $this->email->initialize($config);
+	  $this->email->from($profil->email_toko, $profil->title);
+	  //$this->email->to($order->email);
+	  $this->email->to(
+		array($order->email)
+		);
+	  $this->email->subject($subjek);
+	  $this->email->message(
+	  $message_user
+	  );
+	  if ($this->email->send())
+	  {
+		$this->email->initialize($config);
+		$this->email->from($profil->email_toko, $profil->title);
+		//$this->email->to($order->email);
+		//$this->email->to(
+		  //array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		  //);
+		$this->email->to(
+		  array('budihari47@gmail.com')
+		);
+		$this->email->subject($subjek_admin);
+		$this->email->message(
+		$message_admin
+		);
+		if ($this->email->send())
+	  	{
+			redirect('transaksi');
+	  	}
+	  }
+	  else{
+		  echo '<script type="text/javascript">
+		  alert("gagal dikirim");
+		  </script>';
+	  }
+			
+				redirect('transaksi');
+			}
+		else{
+			$tes = validation_errors('<p style="color:white;">','</p>');
+			$this->session->set_flashdata('alert', $tes);
+			echo '<script>
+				window.history.go(-1);
+			</script>';
+		}
+		} // end submit
+		$data['cek'] = $cek->row();
+		$data['idbayar'] = $this->uri->segment(3);
+		$data['header'] = "Batalkan Pesanan";
+		$this->template->admin('admin/form_batal', $data);
+	}
 
 	public function up_bukti()
 	{

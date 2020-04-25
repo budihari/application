@@ -178,12 +178,17 @@ $user = $data->row();
             <?php
             if ($user->status_proses == 'not paid' && $this->session->userdata('level_admin') == '21') {
 
-               $btn = '<a href="'.base_url('pembayaran/add_pembayaran/'.$user->id_order).'" class="btn btn-default">Tambah Pembayaran</a>';
+               $btn = '<a href="'.site_url('pembayaran/valid/'.$key->id_order).'" class="btn btn-primary" onclick="return confirm(\'Yakin ingin menandai ini sebagai sudah dibayar ?\')">Tandai Sebagai Sudah Dibayar</a>';
    
             } else {
+
+               if ($user->status_proses == 'not paid' && $this->session->userdata('level_admin') == '11') {
+                  $btn = '<a href="'.site_url('transaksi/cancel/'.$user->id_order).'" class="btn btn-danger" onclick="return confirm(\'Yakin ingin membatalkan pesanan ini ?\')">Batalkan Pesanan</a>';
+               }
    
-               if ($user->status_proses == 'paid' && $this->session->userdata('level_admin') == '11') {
-                  $btn = '<a href="'.site_url('transaksi/process/'.$user->id_order).'" class="btn btn-success"><i class="fa fa-circle-o-notch"></i>&nbsp;Proses</a>';
+               elseif ($user->status_proses == 'paid' && $this->session->userdata('level_admin') == '11') {
+                  $btn = '<a href="'.site_url('transaksi/process/'.$user->id_order).'" class="btn btn-success" onclick="return confirm(\'Yakin ingin memproses pesanan ini ?\')"><i class="fa fa-circle-o-notch"></i>&nbsp;Proses</a>
+                  <a href="'.site_url('transaksi/cancel/'.$user->id_order).'" class="btn btn-danger" onclick="return confirm(\'Yakin ingin membatalkan pesanan ini ?\')">Batalkan Pesanan</a>';
                } elseif ($user->status_proses == 'on process' && $this->session->userdata('level_admin') == '11') {
                   $btn = '<a href="'.site_url('transaksi/resi/'.$user->id_order).'" class="btn btn-success"><i class="fa fa-barcode"></i>&nbsp;Input Resi Pengiriman</a>';
                } else {

@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <td><?=$waktu_pesan[0].'<br>'.$waktu_pesan[1];?></td>
                         <td><?="Rp ".number_format($key->total, 0, ',', '.');?></td>
                         <td><?=$key->status_proses;?></td>
-                        <td><a href="<?php echo base_url('pembayaran/add_pembayaran/'.$key->id_order);?>" class="btn btn-default">Konfirmasi</a></td>
+                        <td style="text-align: center;"><a href="<?php echo site_url('pembayaran/valid/'.$key->id_order);?>" class="btn btn-success" onclick="return confirm('Yakin ingin menandai ini sebagai sudah dibayar ?')"><i class="fa fa-check"></i></a></td>
                      </tr>
                   <?php endforeach; ?>
                </tbody>

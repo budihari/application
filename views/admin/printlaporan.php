@@ -102,7 +102,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                      </td>-->
                   </tr>
                   <tr>
-                     <td colspan="8">Tes</td>
+                  <?php
+                        $table = '';
+                        $table1 = "t_detail_order detail
+                        JOIN t_items i ON (detail.id_item = i.id_item)";
+                        $detail = $this->db->get_where($table1, ['detail.id_order' => $key->id_order]);
+                        $table = '';
+                        foreach ($detail->result() as $row)
+                        {
+                           $harga = $row->harga;
+                           $qty = $row->qty;
+                           $subtotal = $qty * $harga;
+                           $table .= '<div style="display:flex; width:100%;"><div style="width:calc(100% - 170px);">'.$row->nama_item.' ('.$qty.' x rp '.number_format($harga, 0, ',', '.').')</div><div style="text-align:right; width:50px;">rp</div><div style="text-align:right; width:120px;">'.number_format($subtotal, 0, ',', '.').'</div></div>';
+                        }
+                        $table .= '';
+                     ?>
+                     <td colspan="8"><p>Product List</p><?=$table;?></td>
                   </tr>
                   <?php endforeach; ?>
                   <tr>

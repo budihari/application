@@ -79,11 +79,6 @@ $user = $data->row();
            <td style="width:65%;">: <?= ucfirst($user->status_proses); ?></td>
        </tr>
        <tr>
-           <td style="width:30%; min-width:120px;">Bukti Pengiriman</td>
-           
-           <td style="width:65%;">: <?= '<a style="color:#2196f3" href="'.base_url().'assets/bukti/'.$user->bukti_pengiriman.'" target="_blank">'.$user->bukti_pengiriman.'</a>'; ?></td>
-       </tr>
-       <tr>
            <td style="width:30%; min-width:120px;">Nomor Resi</td>
            <td style="width:65%;">: <?= $user->resi; ?></td>
        </tr>
@@ -130,7 +125,7 @@ $user = $data->row();
    <div class="row" style="padding: 0px 12px;">
    <div class="x_content">
       <div class="row">
-         <div class="col-md-8 col-sm-12">
+         <div>
             <table class="table table-striped">
                <tr>
                   <th>#</th>

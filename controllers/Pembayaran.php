@@ -52,12 +52,12 @@ class Pembayaran extends CI_Controller {
          $row = array();
          $row[] = $no;
          $row[] = '<a href="'.base_url().'pembayaran/detail/'.$i->idpembayaran.'" style="color:#0ad;">'.$i->idpembayaran.'</a>';
-         $row[] = '<a href="'.base_url().'user/detail/'.$i->iduser.'" style="color:#0ad;">'.$i->iduser.'</a>';
          $row[] = '<a href="'.base_url().'transaksi/detail/'.$i->id_order.'" style="color:#0ad;">'.$i->id_order.'</a>';
          $row[] = date('d M Y', strtotime($i->tgl_pembayaran));
 		 $row[] = $i->namapengirim." (".$i->bank_asal.")";
+		 $row[] = "Rp ".number_format($i->total, 0, ',', '.');
 		 $row[] = "Rp ".number_format($i->jumlah_transfer, 0, ',', '.');
-		 $row[] = $i->bank_tujuan;
+		 $row[] = '<a class="btn btn-primary" href="'.base_url().'assets/bukti/'.$i->bukti.'" target="_blank">Lihat Bukti</a>';
 		 $row[] = $i->status;
          $row[] = $validation.$btn;
 
@@ -171,11 +171,13 @@ class Pembayaran extends CI_Controller {
 	  $today = date("Y-m-d H:i:s");
 	  $id = $this->uri->segment(3);
 	  $idpembayaran = '';
-	  $cek = $this->bayar->get_where('buktipembayaran', array('idpembayaran' => $id));
+	  $cek = $this->bayar->get_where('buktipembayaran', array('id_order' => $id));
 	  if($cek->num_rows() == 1){
 		$cek = $cek->row();
 		$id_order = $cek->id_order;
 		$idpembayaran = $cek->idpembayaran;
+		$jumlah_transfer = $cek->jumlah_transfer;
+		$tgl_pembayaran = $cek->tgl_pembayaran;
 		$cekorder = $this->bayar->get_where('t_order', array('id_order' => $id_order)) -> row();
 		$detail = $cek->detail_pembayaran;
 		$do = $cekorder->detail;
@@ -189,12 +191,13 @@ class Pembayaran extends CI_Controller {
 						'status' => "valid",
 						'detail_pembayaran' => $detail
 					);
-		$this->bayar->update('buktipembayaran', $spek, ['idpembayaran' => $id]);
+		$this->bayar->update('buktipembayaran', $spek, ['id_order' => $id]);
 	  }
 	  else{
 		$cek = $this->bayar->get_where('t_order', array('id_order' => $id))->row();
 		$id_order = $cek->id_order;
 		$do = $cek->detail;
+		$tgl_pembayaran = date("Y-m-d");
 	  }
 	  
 	  if(empty($do)){
@@ -216,11 +219,15 @@ class Pembayaran extends CI_Controller {
 				JOIN t_users usr ON (o.email = usr.email)
 				JOIN buktipembayaran bukti ON (o.id_order = bukti.id_order)";
 			$order = $this->db->get_where($table, ['bukti.idpembayaran' => $idpembayaran])->row();
+			$status = $order->status;
 		}
 		else{
 			$table = "t_order o
 				JOIN t_users usr ON (o.email = usr.email)";
 			$order = $this->db->get_where($table, ['o.id_order' => $id_order])->row();
+			$jumlah_transfer = $order->total;
+			$idpembayaran = time();
+			$status = 'valid';
 		}
 		
 		$table = '';
@@ -266,14 +273,14 @@ class Pembayaran extends CI_Controller {
 			</div>
 			<table style="width: 100%;" cellpadding="12">
 				<tr>
-					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
+					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($jumlah_transfer, 0, ',', '.').'</p></td>
 					<td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
 				</tr>
 				<tr>
-					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
+					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($tgl_pembayaran)).'</p></td>
 				</tr>
 				<tr>
-					<td><p><b>payment status</b><br>'.$order->status.'</p></td>
+					<td><p><b>payment status</b><br>'.$status.'</p></td>
 				</tr>
 				<tr>
 					<td><div style="background: rgba(10,42,59,1); border-radius:4px;"><a style="color: #fff; text-decoration: none; line-height:50px; padding:15px 24px;" href="'.base_url().'home/transaksi.html">check transaction status</a></div></td>
@@ -347,14 +354,14 @@ class Pembayaran extends CI_Controller {
 			</div>
 			<table style="width: 100%;" cellpadding="12">
 				<tr>
-					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($order->jumlah_transfer, 0, ',', '.').'</p></td>
+					<td style="width: 50%;"><p><b>total payment</b><br>rp '.number_format($jumlah_transfer, 0, ',', '.').'</p></td>
 					<td style="width: 50%;"><p><b>payment reference</b><br>'.$idpembayaran.'</p></td>
 				</tr>
 				<tr>
-					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($order->tgl_pembayaran)).'</p></td>
+					<td><p><b>payment method</b><br>'.$order->payment_method.'</p></td><td><p><b>payment date</b><br>'.date('d M Y', strtotime($tgl_pembayaran)).'</p></td>
 				</tr>
 				<tr>
-					<td><p><b>payment status</b><br>'.$order->status.'</p></td>
+					<td><p><b>payment status</b><br>'.$status.'</p></td>
 				</tr>
 			</table>
 			<hr>
@@ -397,8 +404,8 @@ class Pembayaran extends CI_Controller {
 
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		$this->email->to('budihari47@gmail.com');
-		//$this->email->to(array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
+		//$this->email->to('budihari47@gmail.com');
+		$this->email->to(array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
 		$this->email->subject($subjek);
 		$this->email->message($message_admin);
 		if ($this->email->send())

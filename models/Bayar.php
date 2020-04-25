@@ -3,32 +3,35 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Bayar extends CI_Model {
 
-   var $table  = 'buktipembayaran';
-   var $select = array('idpembayaran', 'tgl_pembayaran', 'namapengirim', 'bank_asal', 'iduser', 'id_order', 'jumlah_transfer', 'bank_tujuan', 'status');
+   var $table  = 'buktipembayaran JOIN t_order ON (buktipembayaran.id_order = t_order.id_order)';
+   var $select = array('buktipembayaran.idpembayaran', 'buktipembayaran.tgl_pembayaran', 'buktipembayaran.namapengirim', 'buktipembayaran.bank_asal', 'buktipembayaran.iduser', 'buktipembayaran.id_order', 'buktipembayaran.jumlah_transfer', 'buktipembayaran.bank_tujuan', 'buktipembayaran.bukti', 'buktipembayaran.status', 't_order.total');
 
    var $column_order    = array(
                               null,
-                              'idpembayaran',
-                              'iduser',
-                              'id_order',
-                              'tgl_pembayaran',
-                              'namapengirim',
-                              'bank_asal',
-                              'jumlah_transfer',
-                              'bank_tujuan',
-                              'status',
-                              null
+                              'buktipembayaran.idpembayaran',
+                              'buktipembayaran.iduser',
+                              'buktipembayaran.id_order',
+                              'buktipembayaran.tgl_pembayaran',
+                              'buktipembayaran.namapengirim',
+                              'buktipembayaran.bank_asal',
+                              'buktipembayaran.jumlah_transfer',
+                              'buktipembayaran.bank_tujuan',
+                              'buktipembayaran.bukti',
+                              'buktipembayaran.status',
+                              't_order.total'
                            ); //set column field database for datatable orderable
    var $column_search   = array(
-                              'idpembayaran',
-                              'iduser',
-                              'id_order',
-                              'tgl_pembayaran',
-                              'namapengirim',
-                              'bank_asal',
-                              'jumlah_transfer',
-                              'bank_tujuan',
-                              'status'
+                              'buktipembayaran.idpembayaran',
+                              'buktipembayaran.iduser',
+                              'buktipembayaran.id_order',
+                              'buktipembayaran.tgl_pembayaran',
+                              'buktipembayaran.namapengirim',
+                              'buktipembayaran.bank_asal',
+                              'buktipembayaran.jumlah_transfer',
+                              'buktipembayaran.bank_tujuan',
+                              'buktipembayaran.bukti',
+                              'buktipembayaran.status',
+                              't_order.total'
                            ); //set column field database for datatable searchable
    var $order = array('idpembayaran' => 'desc'); // default order
 
