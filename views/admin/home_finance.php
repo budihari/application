@@ -79,6 +79,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   $alamat = join(", ", $alamat);
                   $tgl_pesan = date('d M Y / H:i:s', strtotime($key->tgl_pesan));
                   $waktu_pesan = explode(" / ",$tgl_pesan);
+                  $query = "SELECT * from buktipembayaran where id_order = '$key->id_order'";
+			         $sql 		= $this->db->query($query);
+                  $btn = '<a href="'.site_url('pembayaran/valid/'.$key->id_order).'" class="btn btn-success" onclick="return confirm(\'Yakin ingin menandai ini sebagai sudah dibayar ?\')"><i class="fa fa-check"></i></a>';
+                  if($sql->num_rows() == 1){
+                     $sql = $sql->row();
+                     if($sql->status == 'awaiting verification' && $this->session->userdata('level_admin') == '21'){
+                        $btn = '<a href="'.base_url().'pembayaran/detail/'.$sql->idpembayaran.'" class="btn btn-primary"><i class="fa fa-search-plus"></i></a>';
+                     }
+                  }
+                  
                   ?>
                      <tr>
                         <td><?=$i++;?></td>
@@ -86,7 +96,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <td><?=$waktu_pesan[0].'<br>'.$waktu_pesan[1];?></td>
                         <td><?="Rp ".number_format($key->total, 0, ',', '.');?></td>
                         <td><?=$key->status_proses;?></td>
-                        <td style="text-align: center;"><a href="<?php echo site_url('pembayaran/valid/'.$key->id_order);?>" class="btn btn-success" onclick="return confirm('Yakin ingin menandai ini sebagai sudah dibayar ?')"><i class="fa fa-check"></i></a></td>
+                        <td style="text-align: center;"><?=$btn;?></td>
                      </tr>
                   <?php endforeach; ?>
                </tbody>

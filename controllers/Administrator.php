@@ -18,12 +18,14 @@ class Administrator extends CI_Controller {
 		$data['tag'] 		= $this->admin->count('t_kategori');
 		$data['item'] 		= $this->admin->count('t_items');
 		$data['trans'] 		= $this->admin->count_where('t_order', ['status_proses!=' => 'belum']);
-		$sql				= $this->db->order_by('tgl_pesan','desc');
+		$sql				= '';
 		if($this->session->userdata('level_admin') == '11'){
+			$sql		= $this->db->order_by('tgl_pesan','desc');
 			$sql 		= $this->db->get_where('t_order', ['status_proses !=' => 'not paid'], 5);
 		}
 		elseif($this->session->userdata('level_admin') == '21'){
-			$sql 		= $this->db->get_where('t_order', ['status_proses' => 'not paid'], 5);
+			$query = "SELECT * from t_order where status_proses = 'not paid' or status_proses = 'awaiting verification' order by tgl_pesan DESC LIMIT 0,5";
+			$sql 		= $this->db->query($query);
 		}
 		$data['last'] 		= $sql;
 		// $this->admin->last('t_order', 5, 'tgl_pesan');

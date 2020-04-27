@@ -105,9 +105,8 @@ class Payment extends CI_Controller {
                   $this->email->initialize($config);
                   $this->email->set_mailtype("html");
                   $this->email->from($profil->email_toko, $profil->title);
-                  $this->email->to(
-                      array('budihari47@gmail.com','henry.gunawan@waterplus.com','brian.chandra@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
-                      );
+                  $this->email->to(array($admin->email,'henry.gunawan@waterplus.com','brian.chandra@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com'));
+                  //$this->email->to(array($admin->email));
                   $this->email->subject('Konfirmasi Pembayaran');
                   $this->email->message(
                     'Hai admin,<br /><br />Ada yang melakukan konfirmasi pembayaran dari akun '.$id_order->username.' dengan ID transaksi '.$id_order->id_order.' pada tanggal '.date("Y-m-d").' dengan nominal Rp. '.number_format($amount, 0, ',', '.').'. Silahkan login untuk melihat detail pembayaran secara lengkap.

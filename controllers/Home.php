@@ -1522,9 +1522,7 @@ just one more step! to activate and verify your account, please click the link b
           	if ($this->email->send()) {
           		$this->email->from($profil->email_toko, $profil->title);
 					//$this->email->to($admin->email);
-					$this->email->to(
-		        	    array('budihari47@gmail.com','brian.chandra@waterplus.com')
-						);
+					$this->email->to(array($admin->email,'brian.chandra@waterplus.com'));
 		        	$this->email->subject('Akun Baru / Username : '.$username);
 		        	$this->email->message(
 		          	'Hai admin,<br /><br />Ada member baru dari '.$profil->title.' dengan username '.$username.' pada tanggal '.date('d M Y', strtotime($tgl_pesan)).'. Silahkan login untuk melihat member secara lengkap.'
@@ -2000,10 +1998,18 @@ public function login()
 	public function transaksi()
 	{
 
-		if (!$this->session->userdata('user_id'))
-		{
-			redirect('home');
-		}
+	if (!$this->session->userdata('user_login'))
+      {
+		$datauser = array (
+			'check' => TRUE,
+			'link' => $this->uri->segment(1).'/'.$this->uri->segment(2)
+			 );
+		$this->session->set_userdata($datauser);
+		redirect('signin');
+	  }
+	  else{
+		$user = $this->app->get_where('t_users', ['username' => $this->session->userdata('username')])->row();
+	  }
 
 		$table		 = "t_order o JOIN t_users u ON (o.email = u.email)";
 		$data['get'] = $this->db->order_by('id_order','desc')->get_where($table, ['id_user' => $this->session->userdata('user_id')]);

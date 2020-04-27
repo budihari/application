@@ -27,8 +27,10 @@ $time = date("H:i:s", time());
     var select = document.getElementById("select_reason").value;
     if (select == "lainnya") {
        document.getElementById("alasan").style.display = "block";
+       document.getElementById("alasan").setAttribute("required","required");
     }
     else{
+      document.getElementById("alasan").removeAttribute("required");
        document.getElementById("alasan").style.display = "none";
     }
  }

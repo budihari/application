@@ -475,12 +475,8 @@ $this->app->update('alamat', $update, array('iduser' => $this->session->userdata
 				//$key['key']    = $this->app->get_where('t_profil', ['id_profil' => 1]);
 
 					$this->email->from($profil->email_toko, $profil->title);
-		        	$this->email->to(
-		        	    array($admin->email,'m.ilham@waterplus.com','brian.chandra@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-						);
-					//$this->email->to(
-					//	array($admin->email)
-					//	);
+		        	$this->email->to(array($admin->email,'m.ilham@waterplus.com','brian.chandra@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
+					//$this->email->to($admin->email);
 		        	$this->email->subject('Pesanan Masuk');
 		        	$this->email->message(
 					  'Hai admin,<br /><br />Ada pesanan baru dari '.$nama_pemesan.' dengan ID pesanan '.$id_order.' pada tanggal '.date('d M Y', strtotime($tgl_pesan)).'. Silahkan login untuk melihat detail pesanan secara lengkap.

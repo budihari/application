@@ -31,10 +31,11 @@ class Pembayaran extends CI_Controller {
 			$btn = '';
 			$validation = '<a href="'.base_url().'pembayaran/detail/'.$i->idpembayaran.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>';
 
-			if ($i->status == 'not valid' && $this->session->userdata('level_admin') == '21') {
+			if ($i->status == 'not valid' || $i->status == 'invalid' && $this->session->userdata('level_admin') == '21') {
 
-				$btn = '<a href="'.site_url('pembayaran/delete/'.$i->idpembayaran).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin Ingin Menghapus Data ini ?\')"><i class="fa fa-trash"></i></a>';
-				$validation = '<a href="'.base_url().'pembayaran/valid/'.$i->idpembayaran.'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
+				//$btn = '<a href="'.site_url('pembayaran/delete/'.$i->idpembayaran).'" class="btn btn-danger btn-xs" onclick="return confirm(\'Yakin Ingin Menghapus Data ini ?\')"><i class="fa fa-trash"></i></a>';
+				$validation = '<a href="'.base_url().'pembayaran/detail/'.$i->idpembayaran.'" class="btn btn-primary btn-xs"><i class="fa fa-search-plus"></i></a>';
+				$btn = '';
 
 			} else if ($i->status == 'valid' && $this->session->userdata('level_admin') == '21') {
 
@@ -45,7 +46,7 @@ class Pembayaran extends CI_Controller {
 			else if ($this->session->userdata('level_admin') == '21'){
 				//$btn = '<a href="'.base_url().'pembayaran/notvalid/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
 				$btn = '<a href="'.base_url().'pembayaran/tolak/'.$i->idpembayaran.'" class="btn btn-danger btn-xs"><i class="fa fa-close"></i></a>';
-				$validation = '<a href="'.base_url().'pembayaran/valid/'.$i->idpembayaran.'" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>';
+				$validation = '<a href="'.base_url().'pembayaran/valid/'.$i->id_order.'" class="btn btn-success btn-xs" onclick="return confirm(\'Yakin ingin menandai ini sebagai sudah dibayar ?\')"><i class="fa fa-check"></i></a>';
 			}
 
          $no++;
@@ -401,11 +402,11 @@ class Pembayaran extends CI_Controller {
 			</div>
 		</body>
 		</html>';
-
+		$admin		= $this->db->get_where('t_admin', ['id_admin' => 1])->row();
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		//$this->email->to('budihari47@gmail.com');
-		$this->email->to(array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
+		//$this->email->to($admin->email);
+		$this->email->to(array($admin->email,'brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
 		$this->email->subject($subjek);
 		$this->email->message($message_admin);
 		if ($this->email->send())
@@ -654,12 +655,11 @@ $message_admin = '
 	  );
 	  if ($this->email->send())
 	  {
+		$admin		= $this->db->get_where('t_admin', ['id_admin' => 1])->row();
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		//$this->email->to($order->email);
-		$this->email->to(
-		  array('budihari47@gmail.com','brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com')
-		  );
+		//$this->email->to($admin->email);
+		$this->email->to(array($admin->email,'brian.chandra@waterplus.com','henry.gunawan@waterplus.com','rendi.gunawan@waterplus.com','emaculata.dona@waterplus.com'));
 		$this->email->subject($subjek);
 		$this->email->message(
 		$message_admin

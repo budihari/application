@@ -93,7 +93,11 @@ $user = $data->row();
                   $ubah_resi = '&nbsp;( <a href="'.site_url('transaksi/resi/'.$user->id_order).'">ubah resi</a> )';
                }
            ?>
-           <td style="width:65%;">: <?= $user->resi.$ubah_resi; ?></td>
+           <td style="width:65%;">: <?php
+           if($this->session->userdata('level_admin') == '11'){
+           $user->resi.$ubah_resi;
+           }
+           ?></td>
        </tr>
    </table>
    <hr>

@@ -10,8 +10,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    $user = $data->row();
    $validation = '';
    $tolak = '';
-   if ($user->status == 'not verified') {
-      $validation = '<a href="'.base_url().'pembayaran/valid/'.$user->idpembayaran.'" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;terima</a>';
+   if ($user->status == 'not verified' || $user->status == 'awaiting verification' && $this->session->userdata('level_admin') == '21') {
+      $validation = '<a href="'.base_url().'pembayaran/valid/'.$user->id_order.'" class="btn btn-success" onclick="return confirm(\'Yakin ingin menandai ini sebagai sudah dibayar ?\')"><i class="fa fa-check"></i>&nbsp;terima</a>';
       $tolak = '<a href="'.base_url().'pembayaran/tolak/'.$user->idpembayaran.'" class="btn btn-danger"><i class="fa fa-close"></i>&nbsp;tolak</a>';
    }
    ?>

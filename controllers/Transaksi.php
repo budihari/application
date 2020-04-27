@@ -462,15 +462,13 @@ $message_admin = '
 	  );
 	  if ($this->email->send())
 	  {
+		$admin		= $this->db->get_where('t_admin', ['id_admin' => 1])->row();
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
-		//$this->email->to($order->email);
-		//$this->email->to(
-		  //array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-		  //);
 		$this->email->to(
-		  array('budihari47@gmail.com')
-		);
+		  array($admin->email,'brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
+		  );
+		//$this->email->to(array($admin->email));
 		$this->email->subject($subjek_admin);
 		$this->email->message(
 		$message_admin
@@ -964,6 +962,7 @@ $message_admin = '
 	  );
 	  if ($this->email->send())
 	  {
+			$admin		= $this->db->get_where('t_admin', ['id_admin' => 1])->row();
 			$order = array (
 			'detail'		=> $do,
 			'resi'			=> $this->input->post('resi'),
@@ -973,12 +972,8 @@ $message_admin = '
 			$this->email->initialize($config);
 			$this->email->from($profil->email_toko, $profil->title);
 			//$this->email->to($order->email);
-			//$this->email->to(
-			//	array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-			//	);
-			$this->email->to(
-				array('budihari47@gmail.com')
-			);
+			$this->email->to(array($admin->email,'brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
+			//$this->email->to(array($admin->email));
 			$this->email->subject($subjek_admin);
 			$this->email->message(
 			$message_admin
@@ -1048,7 +1043,7 @@ $message_admin = '
 			$cek = $this->db->get_where($table, array('o.id_order' => $id_order)) -> row();
 			$order = $cek;
 			$alasan = $this->input->post('alasan_batal');
-			if($alasan = 'lainnya'){
+			if($alasan == 'lainnya'){
 				$alasan = strtolower($this->input->post('alasan_lainnya'));
 				$reason = "Sorry, your order has been canceled due to the following reason '".$alasan."'";
 			}
@@ -1291,15 +1286,12 @@ $message_admin = '
 	  );
 	  if ($this->email->send())
 	  {
+		$admin		= $this->db->get_where('t_admin', ['id_admin' => 1])->row();
 		$this->email->initialize($config);
 		$this->email->from($profil->email_toko, $profil->title);
 		//$this->email->to($order->email);
-		//$this->email->to(
-		  //array('budihari47@gmail.com','brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com')
-		  //);
-		$this->email->to(
-		  array('budihari47@gmail.com')
-		);
+		$this->email->to(array($admin->email,'brian.chandra@waterplus.com','m.ilham@waterplus.com','emaculata.dona@waterplus.com','pingkan.wenas@waterplus.com'));
+		//$this->email->to(array($admin->email));
 		$this->email->subject($subjek_admin);
 		$this->email->message(
 		$message_admin
