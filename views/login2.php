@@ -27,7 +27,7 @@ echo $script_captcha;
                <b style="font-size: 24px; font-family: bariol_regular;">sign up</b>
                <p class="vpadding bariol_regular">already have an account ? <a style="color: #0af;" href="<?= site_url('home/login'); ?>">login here</a></p>
             </div>
-            <form action="" method="post">
+            <form id='i-recaptcha' action="" method="post">
                <div class="input-field">
                   <input type="text" id="username" class="validate" name="user">
                   <label for="username"><i class="fa fa-user"></i>&nbsp;username</label>
@@ -42,7 +42,7 @@ echo $script_captcha;
                </div>
                <br><br>
                <div>
-                  <button type="submit" name="submit" value="Submit" class="blue bariol_regular white-text" style="padding: 18px 0px; border: none; border-radius: 12px; font-size:18px; width: 100%;">sign up</button>
+                  <button type="submit" name="submit" value="Submit" class="blue bariol_regular white-text" style="padding: 18px 0px; border: none; border-radius: 12px; font-size:18px; width: 100%;" data-sitekey="6LfNcukUAAAAADkL9DV3_jbpGYvZgijv7T8krHw4" data-callback="onSubmit">sign up</button>
                </div>
                <br>
                <div>

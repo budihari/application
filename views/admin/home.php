@@ -36,6 +36,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
    <div class="row">
       <div class="col-md-12">
          <div class="x_panel">
+            <h3>Menu Lainnya</h3>
+            <hr />
+            <div>
+               <a href="user/subscriber" class="btn btn-primary"><i class="fa fa-info"></i>&nbsp; Data Subscriber</a>
+               <a href="setting/faq" class="btn btn-primary"><i class="fa fa-question"></i>&nbsp; FAQ</a>
+            </div>
+            <hr>
             <h3>Transaksi Terakhir</h3>
             <hr />
             <table class="table table-bordered">

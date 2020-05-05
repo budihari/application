@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                <b style="font-size: 24px; font-family: bariol_regular;">welcome</b>
                <p class="vpadding bariol_regular">don't have an account ? <a style="color: #0af;" href="<?= site_url('home/registrasi'); ?>">sign up now</a></p>
             </div>
-            <form action="" method="post">
+            <form id='i-recaptcha' action="" method="post">
                <div class="input-field">
                   <input type="text" id="username" class="validate" name="username" required="required">
                   <label for="username"><i class="fa fa-user"></i>&nbsp;email / username</label>
@@ -38,7 +38,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                </div>
                <br><br><br>
                <div>
-                  <button type="submit" name="submit" value="submit" class="blue bariol_regular white-text" style="padding: 18px 0px; border: none; border-radius: 12px; font-size:18px; width: 100%;">login</button>
+
+                  <button type="submit" name="submit" value="submit" class="blue bariol_regular white-text g-recaptcha" style="padding: 18px 0px; border: none; border-radius: 12px; font-size:18px; width: 100%;" data-sitekey="6LfNcukUAAAAADkL9DV3_jbpGYvZgijv7T8krHw4" data-callback="onSubmit">login</button>
                </div>
                <br>
             </form>

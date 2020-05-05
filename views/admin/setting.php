@@ -13,6 +13,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         echo $this->session->flashdata('alert');
         echo '</div>';
      }
+     if ($this->session->flashdata('success'))
+      {
+         echo '<div class="alert alert-success alert-message">';
+         echo $this->session->flashdata('success');
+         echo '</div>';
+      }
      ?>
    </div>
 
@@ -58,6 +64,30 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </label>
             <div class="col-md-6 col-sm-6 col-xs-12">
                <input type="text" class="form-control col-md-7 col-xs-12" name="gplus" value="<?= $gplus; ?>" placeholder="Link Google+">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Youtube
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+               <input type="text" class="form-control col-md-7 col-xs-12" name="youtube" value="<?= $youtube; ?>" placeholder="Link Youtube">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Pinterest
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+               <input type="text" class="form-control col-md-7 col-xs-12" name="pinterest" value="<?= $pinterest; ?>" placeholder="Link Pinterest">
+            </div>
+         </div>
+
+         <div class="form-group">
+            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Instagram
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+               <input type="text" class="form-control col-md-7 col-xs-12" name="instagram" value="<?= $instagram; ?>" placeholder="Link Instagram">
             </div>
          </div>
 

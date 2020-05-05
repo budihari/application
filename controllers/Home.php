@@ -711,13 +711,44 @@ else{
 
 	}
 
-	public function subscribe()
-	{
+public function subscribe()
+{
+function post_captcha($user_response) {
+	$fields_string = '';
+	$fields = array(
+		'secret' => '6LfNcukUAAAAAPtHBlVysH4Deth4fi3MpExGs_NX',
+		'response' => $user_response
+	);
+	foreach($fields as $key=>$value)
+	$fields_string .= $key . '=' . $value . '&';
+	$fields_string = rtrim($fields_string, '&');
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+	curl_setopt($ch, CURLOPT_POST, count($fields));
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+
+	$result = curl_exec($ch);
+	curl_close($ch);
+
+	return json_decode($result, true);
+}
+
+// Call the function post_captcha
+$res = post_captcha($_POST['g-recaptcha-response']);
+if (!$res['success']) {
+	// What happens when the reCAPTCHA is not properly set up
+	echo 'reCAPTCHA error: Check to make sure your keys match the registered domain and are in the correct locations. You may also want to doublecheck your code for typos or syntax errors.';
+} else {
 date_default_timezone_set("Asia/Bangkok");
 $today = date("Y-m-d H:i:s");
 $tgl = date("ymd");
 $this->load->view('classes/class.phpmailer.php');
 function send_email($email){
+$profil 	= $this->db->get_where('t_profil', ['id_profil' => 1])->row();
+$email_toko = $profil->email_toko;
+$password_email = $profil->pass_toko;
 $mail = new PHPMailer;
 $mail->IsSMTP();
 $mail->SMTPSecure = 'ssl'; 
@@ -725,9 +756,9 @@ $mail->Host = "mail.waterplus.com"; //host masing2 provider email
 $mail->SMTPDebug = 2;
 $mail->Port = 465;
 $mail->SMTPAuth = true;
-$mail->Username = "no-reply@waterplus.com"; //user email
-$mail->Password = "Waterplus2019"; //password email
-$mail->SetFrom("no-reply@waterplus.com","waterplus+"); //set email pengirim
+$mail->Username = $email_toko; //user email
+$mail->Password = $password_email; //password email
+$mail->SetFrom($email_toko,"waterplus+"); //set email pengirim
 $mail->Subject = "thank you for signing up to our newsletter"; //subyek email
 $mail->AddAddress($email,"");  //tujuan email
 $message = '
@@ -930,6 +961,7 @@ if($this->input->post('email', TRUE) && !empty($this->input->post('email', TRUE)
         }
     }
 }
+		}
 	}
 
 	public function faq()
@@ -1434,6 +1466,34 @@ if($this->input->post('email', TRUE) && !empty($this->input->post('email', TRUE)
 
 		if($this->input->post('submit', TRUE) == 'Submit')
 		{
+			function post_captcha($user_response) {
+				$fields_string = '';
+				$fields = array(
+					'secret' => '6LfNcukUAAAAAPtHBlVysH4Deth4fi3MpExGs_NX',
+					'response' => $user_response
+				);
+				foreach($fields as $key=>$value)
+				$fields_string .= $key . '=' . $value . '&';
+				$fields_string = rtrim($fields_string, '&');
+			
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+				curl_setopt($ch, CURLOPT_POST, count($fields));
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+			
+				$result = curl_exec($ch);
+				curl_close($ch);
+			
+				return json_decode($result, true);
+			}
+			
+			// Call the function post_captcha
+			$res = post_captcha($_POST['g-recaptcha-response']);
+			if (!$res['success']) {
+				// What happens when the reCAPTCHA is not properly set up
+				echo 'reCAPTCHA error: Check to make sure your keys match the registered domain and are in the correct locations. You may also want to doublecheck your code for typos or syntax errors.';
+			} else {
 
 			$this->load->library('form_validation');
 			$this->form_validation->set_rules('user', 'username', "required|min_length[5]|regex_match[/^[a-zA-Z0-9]+$/]");
@@ -1547,8 +1607,9 @@ just one more step! to activate and verify your account, please click the link b
 			} else {
 				$halaman = 'login2';
 			}
-
-		} else {
+		}
+		}
+		else {
 
 			$halaman = 'login2';
 
@@ -1673,6 +1734,34 @@ public function login()
     $page = 'login';
 	if ($this->input->post('submit') == 'submit')
     {
+		function post_captcha($user_response) {
+			$fields_string = '';
+			$fields = array(
+				'secret' => '6LfNcukUAAAAAPtHBlVysH4Deth4fi3MpExGs_NX',
+				'response' => $user_response
+			);
+			foreach($fields as $key=>$value)
+			$fields_string .= $key . '=' . $value . '&';
+			$fields_string = rtrim($fields_string, '&');
+		
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, 'https://www.google.com/recaptcha/api/siteverify');
+			curl_setopt($ch, CURLOPT_POST, count($fields));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, True);
+		
+			$result = curl_exec($ch);
+			curl_close($ch);
+		
+			return json_decode($result, true);
+		}
+		
+		// Call the function post_captcha
+		$res = post_captcha($_POST['g-recaptcha-response']);
+		if (!$res['success']) {
+			// What happens when the reCAPTCHA is not properly set up
+			echo 'reCAPTCHA error: Check to make sure your keys match the registered domain and are in the correct locations. You may also want to doublecheck your code for typos or syntax errors.';
+		} else {
       date_default_timezone_set("Asia/Bangkok");
       $today = date("Y-m-d H:i:s");
       $user  = $this->input->post('username', TRUE);
@@ -1739,6 +1828,7 @@ public function login()
                 $page = 'login';
 			}
 
+		}
 		}
 
       if ($this->session->userdata('user_login') == TRUE)

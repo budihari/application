@@ -240,6 +240,12 @@ else
 <link href="<?= base_url('assets/css/select2.css'); ?>" rel="stylesheet" />
 <link href="<?= base_url('assets/css/jssor.css'); ?>" type="text/css" rel="stylesheet">
 <link href="<?= base_url('assets/css/menu.css').'?ver='.date("Y-m-d"); ?>" type="text/css" rel="stylesheet">
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script>
+    function onSubmit(token) {
+        document.getElementById("i-recaptcha").submit();
+    }
+</script>
 <script src="<?= base_url('assets/js/jquery.js'); ?>"></script>
 <script src="<?= base_url('assets/js/jssor.js'); ?>"></script>
 <script src="<?= base_url('assets/js/jssor.slider-22.1.9.min.js'); ?>"></script>
@@ -409,18 +415,23 @@ else{
       <p style="padding:0px 12px; font-size:14px; font-family:bariol_light;">sign up to be the first to hear about our exclusive products, promos & discounts</p>
    </div>
    <div class="form-search">
-      <form action="<?php echo base_url();?>home/subscribe" method="post">
+      <form id='i-recaptcha' action="<?php echo base_url();?>home/subscribe" method="post">
       <input type="email" name="email" style="padding:8px 0; box-sizing: border-box;" autocomplete="off" placeholder="enter your email" required="required">
-      <button type="submit" name="subscribe">submit</button>
+      <div style="display: inline-block; width:20%;">
+        <button style="width: 100%;" type="submit" name="subscribe" class="g-recaptcha" data-sitekey="6LfNcukUAAAAADkL9DV3_jbpGYvZgijv7T8krHw4" data-callback="onSubmit">submit</button>
+        </div>
       </form>
    </div>
    <div class="medsos">
-       
-      <a href="http://www.twitter.com/waterplus_" target="_blank"><i class="fa fa-twitter"></i></a>
-      <a href="https://www.facebook.com/waterplus.waterforall/" target="_blank"><i class="fa fa-facebook"></i></a>
-      <a href="https://www.youtube.com/channel/UCF4Jrx90WL8GRYczyF_vSsg" target="_blank"><i class="fa fa-youtube"></i></a>
-      <a href="http://www.pinterest.com/waterplus/" target="_blank"><i class="fa fa-pinterest"></i></a>
-      <a href="http://instagram.com/waterplus.waterforall" target="_blank"><i class="fa fa-instagram"></i></a>
+   <?php
+         $query = "SELECT facebook, twitter, youtube, pinterest, instagram FROM t_profil where id_profil = '1'";
+         $cek = $this->db->query($query)->row();
+   ?>
+      <a href="<?=$cek->twitter;?>" target="_blank"><i class="fa fa-twitter"></i></a>
+      <a href="<?=$cek->facebook;?>" target="_blank"><i class="fa fa-facebook"></i></a>
+      <a href="<?=$cek->youtube;?>" target="_blank"><i class="fa fa-youtube"></i></a>
+      <a href="<?=$cek->pinterest;?>" target="_blank"><i class="fa fa-pinterest"></i></a>
+      <a href="<?=$cek->instagram;?>" target="_blank"><i class="fa fa-instagram"></i></a>
    </div>
    <div class="sitemap vpadding">
       <h3>sitemap</h3>
